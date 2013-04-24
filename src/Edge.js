@@ -35,13 +35,28 @@
 
 		var abcPdl = abc + edge.pq[1];
 
-		return (abdx + dy) / abcPdl;
+		var scalar = (abdx + dy) / abcPdl;
+		console.log(scalar);
+		return scalar;
 	};
 
+	var between = function (min, max, value) {
+		return value >= min && value <= max;
+	}
+
+	var b01 = function (value) {
+		return between(0, 1, value);
+	}
 
 	Edge.prototype.projects = function (other) {
 		var scalar = scalarProjection(other, this.q, this.pq);
-		return scalar >= 0 || scalar === 0;
+
+		if (b01(scalar))
+			return true;
+		else {
+			scalar = scalarProjection(other, this.p, this.pq);
+			return b01(scalar);
+		}
 	};
 
 	jeos.Edge = Edge;
