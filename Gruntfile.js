@@ -8,10 +8,24 @@ module.exports = function (grunt) {
 			dist: {
 				filesSrc: ['tests/simple.js']
 			}
+		},
+
+		cafemocha: {
+			simple: {
+				src: "tests/mocha/*.js",
+				options: {
+					require: ["should", "src/Edge", "src/WeightedOffset"],
+					reporter: 'list'
+				}
+			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-ghost');
 
+	grunt.loadNpmTasks('grunt-cafe-mocha');
+
 	grunt.registerTask('default', ['ghost:dist']);
+
+	grunt.registerTask('test', ['cafemocha']);
 };
