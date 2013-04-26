@@ -26,18 +26,25 @@
 	};
 
 	var scalarProjection = function (edge, point, vector) {
-		var ab = vector[0] / vector[1];
-		var dx = point[0] - edge.p[0];
-		var dy = point[1] - edge.p[0];
+		var a = vector[0],
+				b = vector[1],
+				c = edge.pq[0],
+				d = edge.pq[1],
+				xp = edge.p[0],
+				yp = edge.p[1],
+				xq = point[0],
+				yq = point[1]
+		;
 
-		var abc = ab * edge.pq[0];
-		var abdx = ab * dx;
+		var internal = a*c + b*d;
+		if (internal === 0)
+			return Infinity;
 
-		var abcPdl = abc + edge.pq[1];
+		var dx = xp - xq;
+		var dy = yp - yq;
 
-		var scalar = (abdx + dy) / abcPdl;
-		console.log(scalar);
-		return scalar;
+		return 0 - (b * dy + a * dx) / internal;
+
 	};
 
 	var between = function (min, max, value) {
@@ -57,6 +64,21 @@
 			scalar = scalarProjection(other, this.p, this.pq);
 			return b01(scalar);
 		}
+	};
+
+	Edge.prototype.internal = function (other) {
+		return this.pq[0] * other.pq[0] + this.pq[1] * other.pq[1];
+	};
+
+	Edge.prototype.length = function () {
+		var x = this.pq[0] * this.pq[0];
+		var y = this.pq[1] * this.pq[1];
+
+		return Math.sqrt(x + y);
+	};
+
+	Edge.prototype.angle = function (other) {
+		return Math.acos(this.internal(other) / (this.length() * other.length()));
 	};
 
 	jeos.Edge = Edge;

@@ -53,10 +53,29 @@ describe('Edges:', function () {
 			edge1.projects(new Edge([5,2], [5,3])).should.false;
 		});
 
-		it("X", function () {
+		it("doesn't project Edge([5,4], [6,4])", function () {
 			edge1.projects(new Edge([5,4], [6, 4])).should.false;
 		});
 
+		it("YYYYYY", function () {
+			var e1 = new Edge([0,0], [10,0]);
+			var e2 = new Edge([10,0], [10, 9]);
+			e1.projects(e2).should.false;
+		});
+
+	});
+
+
+	describe("Edge([0,0], [10,0])", function () {
+		var edge = new Edge([0,0], [10,0]);
+
+		var e = 0.000000000000001;
+
+		it("∡ Edge([0,0], [10,10]) should be π / 4 ", function () {
+			var min = (Math.PI / 4) - e;
+			var max = (Math.PI / 4) + e;
+			edge.angle(new Edge([0,0], [10,10])).should.within(min, max);
+		});
 	});
 
 });
