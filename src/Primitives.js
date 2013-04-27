@@ -14,6 +14,10 @@
 		return [0, 0, k];
 	};
 
+	var vector = function (a, b) {
+		return [b[0] - a[0], b[1] - a[1]];
+	};
+
 	/**
 		C is left of AB
 
@@ -24,18 +28,19 @@
 
 	jeos.isLeft = function (a, b, c) {
 
-		var vector = external([b[0]-a[0], b[1] - a[1]], [c[0]-a[0],c[1]-a[1]]);
+		var vec = external(vector(a,b), vector(a,c));
 
-		return vector[2] > 0;
+		return vec[2] > 0;
 	};
 
 	jeos.isRight = function (a, b, c) {
-		var vector = external([a,b], [a,c]);
+		var vec = external(vector(a,b), vector(a,c));
 
-		return vector[2] < 0;
+		return vec[2] < 0;
 	};
 
 
 	jeos.external = external;
+	jeos.vector = vector;
 
 })(typeof GLOBAL === 'undefined' ? window.jeos = window.jeos || {} : GLOBAL.jeos = GLOBAL.jeos || {});

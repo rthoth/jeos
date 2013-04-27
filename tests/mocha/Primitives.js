@@ -28,4 +28,19 @@ describe("Primitives:", function () {
 
 	});
 
+	describe("isRight should", function () {
+
+		it("false in ([1,1],[2,2],[3,4])", function () {
+			jeos.isRight([1,1],[2,2],[3,4]).should.false;
+		});
+
+		it("true in ([1,1],[2,2],[3,2])", function () {
+			jeos.isRight([1,1],[2,2],[3,2]).should.true;
+		});
+
+		it("false in ([1,1],[2,2],[10,10])", function () {
+			jeos.isRight([1,1],[2,2],[10,10]).should.false;
+		});
+	});
+
 });
