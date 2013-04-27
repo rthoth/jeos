@@ -57,11 +57,9 @@ describe('Edges:', function () {
 			edge1.projects(new Edge([5,4], [6, 4])).should.false;
 		});
 
-		it("YYYYYY", function () {
-			var e1 = new Edge([0,0], [10,0]);
-			var e2 = new Edge([10,0], [10, 9]);
-			e1.projects(e2).should.false;
-		});
+		it("doesn't project Edge([2,5], [2,6])", function () {
+			edge1.projects(new Edge([2,5], [2,6])).should.false;
+		})
 
 	});
 

@@ -38,7 +38,7 @@
 
 		var internal = a*c + b*d;
 		if (internal === 0)
-			return Infinity;
+			return NaN;
 
 		var dx = xp - xq;
 		var dy = yp - yq;
