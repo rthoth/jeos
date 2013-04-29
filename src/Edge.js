@@ -8,21 +8,38 @@
 	var Edge = function (p, q) {
 		this.p = p;
 		this.q = q;
-
 		this.pq = [q[0] - p[0], q[1] - p[1]];
+	};
+
+	Edge.prototype.next = null;
+	Edge.prototype.previous = null;
+
+	Edge.prototype.others = function (fn) {
+		var current = this.next;
+		while (current !== null && current !== this) {
+			fn(current);
+			current = current.next;
+		}
 	};
 
 	Edge.from = function (coordinates) {
 		var first = new Edge(coordinates[0], coordinates[1]);
-		var limit = coordinates.length - 1;
 		var last = first;
+		var edges = [first];
+
+		var limit = coordinates.length - 1;
 		for (var i=1 ; i<limit; i++) {
 			var current = new Edge(coordinates[i], coordinates[i + 1]);
+			edges.push(current);
 			last.next = current;
+			current.previous = last;
 			last = current;
 		}
+
 		last.next = first;
-		return first;
+		first.previous = last;
+
+		return edges;
 	};
 
 	var scalarProjection = function (edge, point, vector) {
@@ -49,21 +66,25 @@
 
 	var between = function (min, max, value) {
 		return value >= min && value <= max;
-	}
+	};
 
 	var b01 = function (value) {
 		return between(0, 1, value);
-	}
+	};
 
-	Edge.prototype.projects = function (other) {
-		var scalar = scalarProjection(other, this.q, this.pq);
+	var slowProjects = function (self, other) {
+		var scalar = scalarProjection(other, self.q, self.pq);
 
 		if (b01(scalar))
 			return true;
 		else {
-			scalar = scalarProjection(other, this.p, this.pq);
+			scalar = scalarProjection(other, self.p, self.pq);
 			return b01(scalar);
 		}
+	};
+
+	Edge.prototype.projects = function (other) {
+		return fastProjects(this, other);
 	};
 
 	Edge.prototype.internal = function (other) {
@@ -83,4 +104,4 @@
 
 	jeos.Edge = Edge;
 
-})(typeof GLOBAL === 'undefined' ? window.jeos = window.jeos || {} : GLOBAL.jeos = GLOBAL.jeos || {});
+})(typeof window !== 'undefined' ? window.jeos = window.jeos || {} : GLOBAL.jeos = GLOBAL.jeos || {});

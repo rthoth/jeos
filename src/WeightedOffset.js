@@ -17,10 +17,10 @@
 	*/
 	WeightedOffset.prototype.offset = function(offsetFunc) {
 
-		var coordinates = this.$coordinates;
+		var edges = this.edges;
+		var self = this;
 
 		return false;
-
 	};
 
 

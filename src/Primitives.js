@@ -7,9 +7,6 @@
 	*/
 	var external = function (v1, v2) {
 		var k = (v1[0] * v2[1]) - (v1[1] * v2[0]);
-		console.log({
-			v1: v1, v2: v2, k: k
-		});
 
 		return [0, 0, k];
 	};
@@ -27,7 +24,6 @@
 	*/
 
 	jeos.isLeft = function (a, b, c) {
-
 		var vec = external(vector(a,b), vector(a,c));
 
 		return vec[2] > 0;
@@ -38,7 +34,6 @@
 
 		return vec[2] < 0;
 	};
-
 
 	jeos.external = external;
 	jeos.vector = vector;
