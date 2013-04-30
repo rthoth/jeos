@@ -83,6 +83,40 @@
 		}
 	};
 
+
+	var fastProjects = function(self, other) {
+		var vector = null,
+				a = self.pq[0],
+				b = self.pq[1]
+		;
+
+		if (!a && b) {
+			// a == 0 and b != 0
+			vector = [1, 0];
+		} else if (!b && a) {
+			// b == 0 and a != 0
+			vector = [0, 1];
+		} else if (a && b) {
+			var length = Math.sqrt(1 + a/b);
+			vector = [1/length, (0 - a/b)/length];
+		} else
+			throw new Error("Empty vector!");
+
+		var sp = self.p, sq = self.q;
+		var op = other.p, oq = other.q;
+
+
+
+		var qTest = jeos.isLR(vector, jeos.vector(sp, oq)) * jeos.isLR(vector, jeos.vector(sq, oq));
+		var pTest = jeos.isLR(vector, jeos.vector(sp, op)) * jeos.isLR(vector, jeos.vector(sq, op));
+
+
+		if (qTest && pTest) {
+			return qTest === -1 || pTest === -1;
+		} else
+			return false;
+	};
+
 	Edge.prototype.projects = function (other) {
 		return fastProjects(this, other);
 	};

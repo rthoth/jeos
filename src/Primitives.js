@@ -15,6 +15,20 @@
 		return [b[0] - a[0], b[1] - a[1]];
 	};
 
+	var isLR = function (v1, v2) {
+		var z = (v1[0] * v2[1]) - (v1[1] * v2[0]);
+
+		if (z > 0)
+			return 1;
+
+		if (z === 0)
+			return 0;
+
+		return -1;
+	};
+
+	jeos.isLR = isLR;
+
 	/**
 		C is left of AB
 
@@ -23,16 +37,13 @@
 		c - [double, double]
 	*/
 
-	jeos.isLeft = function (a, b, c) {
-		var vec = external(vector(a,b), vector(a,c));
 
-		return vec[2] > 0;
+	jeos.isLeft = function (a, b, c) {
+		return isLR(vector(a,b), vector(a,c)) === 1;
 	};
 
 	jeos.isRight = function (a, b, c) {
-		var vec = external(vector(a,b), vector(a,c));
-
-		return vec[2] < 0;
+		return isLR(vector(a,b), vector(a,c)) === -1;
 	};
 
 	jeos.external = external;
