@@ -14,30 +14,33 @@
 	Edge.prototype.next = null;
 	Edge.prototype.previous = null;
 
-	Edge.prototype.others = function (fn) {
-		var current = this.next;
-		while (current !== null && current !== this) {
-			fn(current);
-			current = current.next;
-		}
-	};
-
 	Edge.from = function (coordinates) {
 		var first = new Edge(coordinates[0], coordinates[1]);
 		var last = first;
 		var edges = [first];
+		var current = null;
 
 		var limit = coordinates.length - 1;
 		for (var i=1 ; i<limit; i++) {
-			var current = new Edge(coordinates[i], coordinates[i + 1]);
+			current = new Edge(coordinates[i], coordinates[i + 1]);
 			edges.push(current);
 			last.next = current;
 			current.previous = last;
 			last = current;
 		}
 
-		last.next = first;
-		first.previous = last;
+		current = new Edge(coordinates[coordinates.length-1], coordinates[0]);
+		last.next = current;
+		current.previous = last;
+		edges.push(current);
+
+		current.next = first;
+		first.previous = current;
+
+		console.log({
+			DEBUG: "Edge.from",
+			edges: edges.map(function(e){return e.toString();})
+		});
 
 		return edges;
 	};
@@ -85,43 +88,33 @@
 
 
 	var fastProjects = function(self, other) {
-		var vector = null,
-				a = self.pq[0],
-				b = self.pq[1]
-		;
-
-		if (!a && b) {
-			// a == 0 and b != 0
-			vector = [1, 0];
-		} else if (!b && a) {
-			// b == 0 and a != 0
-			vector = [0, 1];
-		} else if (a && b) {
-			var length = Math.sqrt(1 + Math.pow(a/b, 2));
-			vector = [1/length, (0 - a/b)/length];
-		} else
-			throw new Error("Empty vector!");
+		var vector = self.normal(10);
 
 		var sp = self.p, sq = self.q;
 		var op = other.p, oq = other.q;
 
+		var pTest = jeos.isLR(vector, jeos.vector(sq, op)) | jeos.isLR(vector, jeos.vector(sp, op));
+		var qTest = jeos.isLR(vector, jeos.vector(sq, oq)) | jeos.isLR(vector, jeos.vector(sp, oq));
 
-
-		var qTest = jeos.isLR(vector, jeos.vector(sp, oq)) ^ jeos.isLR(vector, jeos.vector(sq, oq));
-		var pTest = jeos.isLR(vector, jeos.vector(sp, op)) ^ jeos.isLR(vector, jeos.vector(sq, op));
-
-		console.log({qTest: qTest, pTest: pTest});
-
-		if (qTest === pTest) {
-			return [0,1,2].indexOf(qTest) === -1;
-		} else {
-			return !!(pTest ^ qTest);
-		}
-
+		return (qTest !== pTest) ? true : qTest === 3;
 	};
 
 	Edge.prototype.projects = function (other) {
 		return fastProjects(this, other);
+	};
+
+	Edge.prototype.normal = function (length) {
+		length = length / length;
+		var a = this.pq[0], b = this.pq[1];
+		if (a === 0)
+			return [length, 0];
+		else if (b === 0)
+			return [0, length];
+		else {
+			var vec = [0 - (b * length) / a, length];
+			var len = Math.sqrt(Math.pow(vec[0],2) + Math.pow(vec[1],2));
+			return [vec[0]/len, vec[1]/len];
+		}
 	};
 
 	Edge.prototype.toString = function () {
@@ -143,13 +136,36 @@
 		return Math.acos(this.internal(other) / (this.length() * other.length()));
 	};
 
+	Edge.prototype.distanceOfPoint = function(point) {
+		var z = (point[0] - this.p[0]) * this.pq[1] + (point[1] - this.p[1]) * this.pq[0];
+		return Math.sqrt( (z * z) / Math.pow(this.pq[0],2) + Math.pow(this.pq[1],2));
+	};
+
+	Edge.prototype.isLeft = function (other) {
+		var lr = jeos.isLR(this.pq, jeos.vector(this.p, other.p));
+
+		if (lr === 0)
+			lr = jeos.isLR(this.pq, jeos.vector(this.p, other.q));
+
+		return lr === 1;
+	};
+
 	Edge.prototype.forOthers = function (fn) {
 		var current = this.next;
 		while (current !== null && current !== this) {
+			console.log({
+				"DEBUG":"Edge.forOthers",
+				self: this.toString(),
+				current: current.toString()
+			});
 			fn(current);
 			current = current.next;
 		}
 	};
+
+	Edge.prototype.invert = function () {
+		return new Edge(this.q, this.p);
+	}
 
 	jeos.Edge = Edge;
 

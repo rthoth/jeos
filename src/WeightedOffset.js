@@ -20,7 +20,7 @@
 		var edges = this.edges;
 		var self = this;
 
-		edges.forEach(function (edge) {
+		var offsetCoordinates = edges.map(function (edge) {
 
 			var projections = [];
 
@@ -29,9 +29,46 @@
 					projections.push(other);
 			});
 
+			console.log({
+				"DEBUG":"WeightedOffset.offset",
+				edge: edge.toString(),
+				projections: projections.map(function (e) { return e.toString();})
+			});
+
+			projections = projections.map(function (e) {
+				var distances = [edge.distanceOfPoint(e.p) , edge.distanceOfPoint(e.q)];
+
+				if (distances[1] < distances[0]) {
+					e = e.invert();
+					distances = distances.reverse();
+				}
+
+				return {
+					edge: e, distances: distances
+				};
+
+			}).sort(function (e1, e2) {
+				return (e1.distances[0] < e2.distances[0]) ? -1 : ((e2.distances[0] > e1.distances[0]) ? 1 : 0);
+			});
+
+			return offsetOf(edge, projections, offsetFunc);
 		});
 
 		return false;
+	};
+
+
+	var offsetOf = function (edge, projections, func) {
+		while (projections.length > 0) {
+			var process = projections.shift();
+			var inclusive = projections.filter(function (other) {
+				return other.distances[0] <= process.distances[1];
+			});
+
+
+
+			console.log(inclusive);
+		}
 	};
 
 

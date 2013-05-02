@@ -11,6 +11,11 @@
 		return [0, 0, k];
 	};
 
+	var internal = function (v1, v2) {
+		return v1[0] * v2[1] + v1[1] * v2[0];
+	};
+
+
 	var vector = function (a, b) {
 		return [b[0] - a[0], b[1] - a[1]];
 	};
@@ -22,8 +27,6 @@
 			z = 1;
 		else if (z < 0)
 			z = 2;
-
-		console.log({"DEBUG": "isLR", v1: v1, v2: v2, z: z});
 
 		return z;
 	};
@@ -45,6 +48,11 @@
 
 	jeos.isRight = function (a, b, c) {
 		return isLR(vector(a,b), vector(a,c)) === 2;
+	};
+
+
+	jeos.pseudoAngle = function (v1, v2) {
+		return 1 - internal(v1, v2);
 	};
 
 	jeos.external = external;
