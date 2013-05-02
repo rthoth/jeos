@@ -20,6 +20,17 @@
 		var edges = this.edges;
 		var self = this;
 
+		edges.forEach(function (edge) {
+
+			var projections = [];
+
+			edge.forOthers(function (other) {
+				if (edge.projects(other))
+					projections.push(other);
+			});
+
+		});
+
 		return false;
 	};
 

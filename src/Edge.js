@@ -97,7 +97,7 @@
 			// b == 0 and a != 0
 			vector = [0, 1];
 		} else if (a && b) {
-			var length = Math.sqrt(1 + a/b);
+			var length = Math.sqrt(1 + Math.pow(a/b, 2));
 			vector = [1/length, (0 - a/b)/length];
 		} else
 			throw new Error("Empty vector!");
@@ -107,18 +107,25 @@
 
 
 
-		var qTest = jeos.isLR(vector, jeos.vector(sp, oq)) * jeos.isLR(vector, jeos.vector(sq, oq));
-		var pTest = jeos.isLR(vector, jeos.vector(sp, op)) * jeos.isLR(vector, jeos.vector(sq, op));
+		var qTest = jeos.isLR(vector, jeos.vector(sp, oq)) ^ jeos.isLR(vector, jeos.vector(sq, oq));
+		var pTest = jeos.isLR(vector, jeos.vector(sp, op)) ^ jeos.isLR(vector, jeos.vector(sq, op));
 
+		console.log({qTest: qTest, pTest: pTest});
 
-		if (qTest && pTest) {
-			return qTest === -1 || pTest === -1;
-		} else
-			return false;
+		if (qTest === pTest) {
+			return [0,1,2].indexOf(qTest) === -1;
+		} else {
+			return !!(pTest ^ qTest);
+		}
+
 	};
 
 	Edge.prototype.projects = function (other) {
 		return fastProjects(this, other);
+	};
+
+	Edge.prototype.toString = function () {
+		return "Edge([" + this.p + "], [" + this.q + "])";
 	};
 
 	Edge.prototype.internal = function (other) {
@@ -134,6 +141,14 @@
 
 	Edge.prototype.angle = function (other) {
 		return Math.acos(this.internal(other) / (this.length() * other.length()));
+	};
+
+	Edge.prototype.forOthers = function (fn) {
+		var current = this.next;
+		while (current !== null && current !== this) {
+			fn(current);
+			current = current.next;
+		}
 	};
 
 	jeos.Edge = Edge;

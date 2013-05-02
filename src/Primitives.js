@@ -19,12 +19,13 @@
 		var z = (v1[0] * v2[1]) - (v1[1] * v2[0]);
 
 		if (z > 0)
-			return 1;
+			z = 1;
+		else if (z < 0)
+			z = 2;
 
-		if (z === 0)
-			return 0;
+		console.log({"DEBUG": "isLR", v1: v1, v2: v2, z: z});
 
-		return -1;
+		return z;
 	};
 
 	jeos.isLR = isLR;
@@ -43,7 +44,7 @@
 	};
 
 	jeos.isRight = function (a, b, c) {
-		return isLR(vector(a,b), vector(a,c)) === -1;
+		return isLR(vector(a,b), vector(a,c)) === 2;
 	};
 
 	jeos.external = external;
