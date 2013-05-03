@@ -29,12 +29,6 @@
 					projections.push(other);
 			});
 
-			console.log({
-				"DEBUG":"WeightedOffset.offset",
-				edge: edge.toString(),
-				projections: projections.map(function (e) { return e.toString();})
-			});
-
 			projections = projections.map(function (e) {
 				var distances = [edge.distanceOfPoint(e.p) , edge.distanceOfPoint(e.q)];
 
@@ -64,10 +58,6 @@
 			var inclusive = projections.filter(function (other) {
 				return other.distances[0] <= process.distances[1];
 			});
-
-
-
-			console.log(inclusive);
 		}
 	};
 

@@ -49,7 +49,7 @@ describe("Primitives:", function () {
 		});
 
 		it("returns 1 @ [0.5,0.5]", function(){
-			jeos.angle([.5, .5]).should.equal(1);
+			jeos.angle([0.5, 0.5]).should.equal(1);
 		});
 
 		it("returns 1.5 @ [2,4]", function(){
@@ -80,6 +80,12 @@ describe("Primitives:", function () {
 		});
 		it("returns 1.5 @ [2,4]", function(){
 			jeos.angle([2,4]).should.equal(1.5);
+		});
+		it("returns -1.75 [2,-8]", function(){
+			jeos.angle([2,-8]).should.equal(-1.75);
+		});
+		it("returns -2.25 [-2,-8]", function(){
+			jeos.angle([-2,-8]).should.equal(-2.25);
 		});
 	});
 

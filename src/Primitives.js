@@ -7,7 +7,8 @@
 			isRight,
 			angle,
 			vector,
-			angleVV
+			angleVV,
+			polarSort
 	;
 	/**
 		external product:
@@ -71,6 +72,31 @@
 		return angle(v2) - angle(v1);
 	};
 
+	polarSort = function (coordinates) {
+		var pivot = coordinates.reduce(function(p1, p2) {
+			return [p1[0]+p2[0], p1[1]+p2[1]];
+		});
+
+		pivot[0] = pivot[0] / coordinates.length;
+		pivot[1] = pivot[1] / coordinates.length;
+
+		var pivotAngle = function (p1, p2) {
+			var result = angleVV(vector(pivot, p1), vector(pivot, p2));
+			return result;
+		};
+
+		var length = coordinates.length - 1,
+				ng = 0, i
+		;
+
+		for (i=0; i < length; i++) {
+			ng += pivotAngle(coordinates[i], coordinates[i+1]);
+		}
+		ng += pivotAngle(coordinates[i], coordinates[0]);
+
+		return (ng < 0) ? coordinates.slice(0).reverse() : coordinates;
+	};
+
 	jeos.external = external;
 	jeos.vector = vector;
 	jeos.isLR = isLR;
@@ -78,5 +104,6 @@
 	jeos.isRight = isRight;
 	jeos.angle = angle;
 	jeos.angleVV = angleVV;
+	jeos.polarSort = polarSort;
 
 })(typeof GLOBAL === 'undefined' ? window.jeos = window.jeos || {} : GLOBAL.jeos = GLOBAL.jeos || {});

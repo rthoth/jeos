@@ -37,11 +37,6 @@
 		current.next = first;
 		first.previous = current;
 
-		console.log({
-			DEBUG: "Edge.from",
-			edges: edges.map(function(e){return e.toString();})
-		});
-
 		return edges;
 	};
 
@@ -153,11 +148,6 @@
 	Edge.prototype.forOthers = function (fn) {
 		var current = this.next;
 		while (current !== null && current !== this) {
-			console.log({
-				"DEBUG":"Edge.forOthers",
-				self: this.toString(),
-				current: current.toString()
-			});
 			fn(current);
 			current = current.next;
 		}
