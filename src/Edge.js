@@ -40,6 +40,26 @@
 		return edges;
 	};
 
+	var between = function (min, max, value) {
+		return value >= min && value <= max;
+	};
+
+	var b01 = function (value) {
+		return between(0, 1, value);
+	};
+
+	var fastProjects = function(self, other) {
+		var vector = self.normal(10);
+
+		var sp = self.p, sq = self.q;
+		var op = other.p, oq = other.q;
+
+		var pTest = jeos.isLR(vector, jeos.vector(sq, op)) | jeos.isLR(vector, jeos.vector(sp, op));
+		var qTest = jeos.isLR(vector, jeos.vector(sq, oq)) | jeos.isLR(vector, jeos.vector(sp, oq));
+
+		return (qTest !== pTest) ? true : qTest === 3;
+	};
+
 	var scalarProjection = function (edge, point, vector) {
 		var a = vector[0],
 				b = vector[1],
@@ -62,14 +82,6 @@
 
 	};
 
-	var between = function (min, max, value) {
-		return value >= min && value <= max;
-	};
-
-	var b01 = function (value) {
-		return between(0, 1, value);
-	};
-
 	var slowProjects = function (self, other) {
 		var scalar = scalarProjection(other, self.q, self.pq);
 
@@ -81,21 +93,52 @@
 		}
 	};
 
-
-	var fastProjects = function(self, other) {
-		var vector = self.normal(10);
-
-		var sp = self.p, sq = self.q;
-		var op = other.p, oq = other.q;
-
-		var pTest = jeos.isLR(vector, jeos.vector(sq, op)) | jeos.isLR(vector, jeos.vector(sp, op));
-		var qTest = jeos.isLR(vector, jeos.vector(sq, oq)) | jeos.isLR(vector, jeos.vector(sp, oq));
-
-		return (qTest !== pTest) ? true : qTest === 3;
+	Edge.prototype.indexOf = function (point) {
+		return scalarProjection(this, point, this.pq);
 	};
 
-	Edge.prototype.projects = function (other) {
-		return fastProjects(this, other);
+	Edge.prototype.angle = function (other) {
+		return Math.acos(this.internal(other) / (this.length() * other.length()));
+	};
+
+	Edge.prototype.distanceOfPoint = function(point) {
+		var vpa = jeos.vector(this.p, point);
+
+		var z = vpa[0]*this.pq[1] - vpa[1]*this.pq[0];
+
+		return Math.sqrt( (z * z) / (Math.pow(this.pq[0], 2) + Math.pow(this.pq[1], 2)));
+	};
+
+	Edge.prototype.internal = function (other) {
+		return this.pq[0] * other.pq[0] + this.pq[1] * other.pq[1];
+	};
+
+	Edge.prototype.forOthers = function (fn) {
+		var current = this.next;
+		while (current !== null && current !== this) {
+			fn(current);
+			current = current.next;
+		}
+	};
+
+	Edge.prototype.invert = function () {
+		return new Edge(this.q, this.p);
+	};
+
+	Edge.prototype.isLeft = function (other) {
+		var lr = jeos.isLR(this.pq, jeos.vector(this.p, other.p));
+
+		if (lr === 0)
+			lr = jeos.isLR(this.pq, jeos.vector(this.p, other.q));
+
+		return lr === 1;
+	};
+
+	Edge.prototype.length = function () {
+		var x = this.pq[0] * this.pq[0];
+		var y = this.pq[1] * this.pq[1];
+
+		return Math.sqrt(x + y);
 	};
 
 	Edge.prototype.normal = function (length) {
@@ -112,50 +155,20 @@
 		}
 	};
 
+	Edge.prototype.pointAt = function (index) {
+		return [
+			this.p[0] + this.pq[0] * index,
+			this.p[1] + this.pq[1] * index
+		];
+	};
+
+	Edge.prototype.projects = function (other) {
+		return fastProjects(this, other);
+	};
+
 	Edge.prototype.toString = function () {
 		return "Edge([" + this.p + "], [" + this.q + "])";
 	};
-
-	Edge.prototype.internal = function (other) {
-		return this.pq[0] * other.pq[0] + this.pq[1] * other.pq[1];
-	};
-
-	Edge.prototype.length = function () {
-		var x = this.pq[0] * this.pq[0];
-		var y = this.pq[1] * this.pq[1];
-
-		return Math.sqrt(x + y);
-	};
-
-	Edge.prototype.angle = function (other) {
-		return Math.acos(this.internal(other) / (this.length() * other.length()));
-	};
-
-	Edge.prototype.distanceOfPoint = function(point) {
-		var z = (point[0] - this.p[0]) * this.pq[1] + (point[1] - this.p[1]) * this.pq[0];
-		return Math.sqrt( (z * z) / Math.pow(this.pq[0],2) + Math.pow(this.pq[1],2));
-	};
-
-	Edge.prototype.isLeft = function (other) {
-		var lr = jeos.isLR(this.pq, jeos.vector(this.p, other.p));
-
-		if (lr === 0)
-			lr = jeos.isLR(this.pq, jeos.vector(this.p, other.q));
-
-		return lr === 1;
-	};
-
-	Edge.prototype.forOthers = function (fn) {
-		var current = this.next;
-		while (current !== null && current !== this) {
-			fn(current);
-			current = current.next;
-		}
-	};
-
-	Edge.prototype.invert = function () {
-		return new Edge(this.q, this.p);
-	}
 
 	jeos.Edge = Edge;
 

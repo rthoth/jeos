@@ -10,7 +10,6 @@ describe("Simple QuadTest", function () {
 			});
 
 			offset.should.ok;
-			
 		});
 	});
 

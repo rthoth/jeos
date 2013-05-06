@@ -14,7 +14,12 @@ module.exports = function (grunt) {
 			simple: {
 				src: "tests/mocha/*.js",
 				options: {
-					require: ["should", "src/Edge", "src/WeightedOffset", "src/Primitives"],
+					require: [
+						"should", "src/Edge",
+						"src/primitives.js",
+						"src/WeightedOffset", "src/primitives/angle.js",
+						"src/primitives/clockWise.js"
+					],
 					reporter: 'list'
 				}
 			}

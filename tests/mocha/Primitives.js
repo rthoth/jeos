@@ -64,7 +64,7 @@ describe("Primitives:", function () {
 			jeos.angle([26,13]).should.equal(0.5);
 		});
 		it("returns -3 @ [-14,-14]", function() {
-			jeos.angle([-14,-14]).should.equal(-3);
+			jeos.angle([-14,-14]).should.equal(5);
 		});
 		it("returns 3 @ [-107,107]", function() {
 			jeos.angle([-107,107]).should.equal(3);
@@ -73,29 +73,29 @@ describe("Primitives:", function () {
 			jeos.angle([-0.13,0.26]).should.equal(2.5);
 		});
 		it("returns -3.5 @ [-38, -19]", function(){
-			jeos.angle([-38,-19]).should.equal(-3.5);
+			jeos.angle([-38,-19]).should.equal(4.5);
 		});
 		it("returns -0.5 @ [3, -1.5]", function(){
-			jeos.angle([3,-1.5]).should.equal(-0.5);
+			jeos.angle([3,-1.5]).should.equal(7.5);
 		});
 		it("returns 1.5 @ [2,4]", function(){
 			jeos.angle([2,4]).should.equal(1.5);
 		});
 		it("returns -1.75 [2,-8]", function(){
-			jeos.angle([2,-8]).should.equal(-1.75);
+			jeos.angle([2,-8]).should.equal(6.25);
 		});
 		it("returns -2.25 [-2,-8]", function(){
-			jeos.angle([-2,-8]).should.equal(-2.25);
+			jeos.angle([-2,-8]).should.equal(5.75);
 		});
 	});
 
 	describe("jeos.angleVV should", function () {
 
 		it("returns 0.5 @ [1,1]->[1,2]", function () {
-			jeos.angleVV([1,1], [1,2]).should.equal(0.5);
+			jeos.aV2V([1,1], [1,2]).should.equal(0.5);
 		});
 		it("returns -2 @ [2,4]->[3,-1.5]", function(){
-			jeos.angleVV([2,4],[3, -1.5]).should.equal(-2);
+			jeos.aV2V([2,4],[3, -1.5]).should.equal(6);
 		});
 	});
 
