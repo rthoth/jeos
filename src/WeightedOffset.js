@@ -58,16 +58,16 @@
 		});
 	};
 
-	var piOverlaps = function (pi, pis) {
+	var searchOverlaps = function (pi, pis) {
 		var result = [];
 		pis.forEach(function (opi, index) {
 			var maxMin = Math.max(pi[0], opi[0]);
 			var minMax = Math.min(pi[1], opi[1]);
 
 			if (maxMin < minMax) {
-				result.push([maxMin, minMax, index]);
+				result.push(index);
 			} else if (maxMin === minMax) {
-				result.push([Math.min(pi[0], opi[0]), Math.max(pi[1], opi[1]), index]);
+				result.push(index);
 			}
 		});
 
@@ -76,7 +76,7 @@
 
 	var removeShadows = function (npi, shadows) {
 		npi.slice(0).forEach(function (pi, piIndex) {
-			var overlaps = piOverlaps(pi, shadows);
+			var overlaps = searchOverlaps(pi, shadows);
 			if (overlaps !== false) {
 				overlaps.forEach(function(overlap) {
 					console.log(overlap);
@@ -85,24 +85,86 @@
 		});
 	};
 
+	var interpolation = function (interval, index) {
+		var delta = (interval[3] - interval[2]) / (interval[1] - interval[0]);
+		return interval[2] + (delta * (index - interval[0]));
+	};
+
+	var mergeOverlaps = function (pi, oPis, overlaps) {
+		overlaps.forEach(function(index) {
+			var otherPi = oPis[index];
+			var pis = pi[0] <= otherPi[0] ? [pi, otherPi] : [otherPi, pi];
+			var slices;
+
+			var min = Math.max(pis[0][0], pis[1][0]), max = Math.min(pis[0][1], pis[1][1]);
+			if (min === max) {
+				// continuous...
+				slices = pis;
+			} else if (min < max) {
+				slices = pis.reduce(function (left, right) {
+					var result = [];
+					if (left[0] < min)
+						result.push([left[0], min, left[2], interpolation(left, min)]);
+
+					var intersectionStartDistance = Math.min(interpolation(left, min), right[2]);
+					var intersectionEndDistance = Math.min(left[3], interpolation(right, max));
+
+					result.push([min, max, intersectionStartDistance, intersectionStartDistance]);
+
+					if (right[1] > max)
+						result.push([max, right[1], interpolation(right, max), right[3]]);
+
+					return result;
+				});
+			}
+
+			Array.prototype.splice.apply(oPis, [index, 1].concat(slices));
+		});
+	};
+
 	var offsetOf = function (target, opposites, func) {
 		var result = [];
+
 		while (opposites.length) {
 			var nearest = opposites.shift();
 			var pis = [projectInterval(nearest.edge, target)];
 			var neighbours = removeNeighbours(opposites, nearest);
 			neighbours.forEach(function (neighbour) {
-				var npi = projectInterval(neighbour.edge, target);
-				var overlaps = piOverlaps(npi, pis);
+				var neighbourPi = projectInterval(neighbour.edge, target);
+				var overlaps = searchOverlaps(neighbourPi, pis);
 				if (overlaps)
-					splitOverlaps(npi, pis, overlaps);
-
+					mergeOverlaps(neighbourPi, pis, overlaps);
+				else
+					pis.push(neighbourPi);
 			});
+
 			removeShadows(pis, result);
 			result = result.concat(pis);
 		}
 
-		return result;
+		var offset = [];
+		var calculateOffset = function (index,  distance) {
+			var a = target.pq[0], b = target.pq[1];
+			var x,y;
+			if (a !== 0) {
+				y = 0 - ((a * distance) / target.length());
+				x = 0 - ((b / a) * y);
+			} else {
+				x = (b * distance) / target.length();
+				y = 0 - ((a / b) * x);
+			}
+			var point = target.pointAt(index);
+			return [point[0] + x, point[1] + y];
+		};
+		result.forEach(function (interval) {
+			var off0 = func(interval[2]);
+			var off1 = func(interval[3]);
+
+			offset.push(calculateOffset(interval[0], off0));
+			offset.push(calculateOffset(interval[1], off1));
+		});
+
+		return offset;
 	};
 
 	/**
