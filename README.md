@@ -22,7 +22,7 @@ Example:
         [-100,-100], [100,-100],[0,100]
     ];
     
-    var weightedOffset = new WeightedOffset(trianguleCoordinates);
+    var weightedOffset = new WeightedOffset(triangleCoordinates);
     
     var triangleOffsetedCoordinates = weightedOffset.offset(function (distance) {
         return distance ? Math.sqrt(distance) : 10;
