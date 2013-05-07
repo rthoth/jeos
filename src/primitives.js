@@ -3,8 +3,25 @@
 	var isLeft,
 			isLR,
 			isRight,
-			vector
+			vector,
+			Type
 	;
+
+	Type = function (prototype) {
+		var type = function () {
+			if (this.initialize)
+				return this.initialize.apply(this, arguments);
+		};
+
+		for (var k in prototype) {
+			if (prototype.hasOwnProperty(k))
+				type.prototype[k] = prototype[k];
+		}
+
+		console.log(type.prototype);
+
+		return type;
+	};
 
 	isLeft = function (a, b, c) {
 		return isLR(vector(a,b), vector(a,c)) === 1;
@@ -34,5 +51,6 @@
 	jeos.isLR = isLR;
 	jeos.isRight = isRight;
 	jeos.vector = vector;
+	jeos.Type = Type;
 
 })(typeof GLOBAL === 'undefined' ? window.jeos = window.jeos || {} : GLOBAL.jeos = GLOBAL.jeos || {});

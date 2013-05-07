@@ -17,8 +17,8 @@
 
 
 	var edges2Coordinates = function (edges) {
-		return edges.slice(1).map(function (e) {
-			return e.p[0] + "," + (0 - e.p[1]);
+		return edges.map(function (e) {
+			return e.p[0] + "," + e.p[1];
 		}).join(" ");
 	};
 
@@ -32,9 +32,10 @@
 		strokeo = strokeo === undefined ? 1 : strokeo;
 
 		var str = edges2Coordinates(edges);
-		var polygon = svg.polygon(str);
+		var polygon = svg.polygon(str, true);
+		polygon.draggable();
 
-		polygon.center(width/2,height/2);
+		//polygon.center(width/2,height/2);
 
 		polygon.attr({
 			fill: fill,
