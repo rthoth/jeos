@@ -1,4 +1,9 @@
-jeos
-====
+jeos.js
+===
 
-Javascript like Geos?
+A simple and strange js framework.
+
+
+Usage
+---
+

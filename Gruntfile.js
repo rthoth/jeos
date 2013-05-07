@@ -20,7 +20,7 @@ module.exports = function (grunt) {
 					banner: "/** \n\t\tThis is Sparta!\n **/\n"
 				},
 				files: {
-					'target/jeos.min.js': [
+					'build/jeos.min.js': [
 						'src/primitives.js',
 						'src/primitives/angle.js',
 						'src/primitives/clockWise.js',
