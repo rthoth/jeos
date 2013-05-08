@@ -17,7 +17,8 @@ module.exports = function (grunt) {
 					compress: true,
 					beautify: true,
 					report: 'gzip',
-					banner: "/** \n\t\tThis is Sparta!\n **/\n"
+					banner: '/**\n\t\t <%= pkg.name %> - v<%= pkg.version %> - <%= pkg.branch %> - ' +
+									'<%= grunt.template.today("yyyy-mm-dd hh:MM") %>\n**/\n'
 				},
 				files: {
 					'build/jeos.min.js': [
