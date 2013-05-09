@@ -11,22 +11,31 @@ module.exports = function (grunt) {
 		},
 
 		uglify: {
-			jeos: {
+			dev: {
+				options: {
+					mangle: false,
+					compress: false,
+					beautify: true
+				},
+				files: {
+					'build/jeos.dev.js': [
+						'src/core/Core.js',
+						'src/core/Angle.js',
+						'src/core/ClockWise.js',
+						'src/core/Edge.js',
+						'src/offset/WeightedOffset.js'
+					]
+				}
+			},
+			min: {
 				options: {
 					mangle: true,
 					compress: true,
-					beautify: true,
-					report: 'gzip',
-					banner: '/**\n\t\t <%= pkg.name %> - v<%= pkg.version %> - <%= pkg.branch %> - ' +
-									'<%= grunt.template.today("yyyy-mm-dd hh:MM") %>\n**/\n'
+					beautify: false
 				},
 				files: {
-					'build/jeos.min.js': [
-						'src/primitives.js',
-						'src/primitives/angle.js',
-						'src/primitives/clockWise.js',
-						'src/Edge.js',
-						'src/WeightedOffset.js'
+					'build/jeos.min.js' : [
+						'build/jeos.dev.js'
 					]
 				}
 			}
@@ -37,10 +46,7 @@ module.exports = function (grunt) {
 				src: "tests/mocha/*.js",
 				options: {
 					require: [
-						"should", "src/Edge",
-						"src/primitives.js",
-						"src/WeightedOffset", "src/primitives/angle.js",
-						"src/primitives/clockWise.js"
+						"should", "build/jeos.dev.js"
 					],
 					reporter: 'list'
 				}
@@ -54,7 +60,9 @@ module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-	grunt.registerTask('default', ['ghost:dist']);
+	grunt.registerTask('test', ['uglify:dev', 'cafemocha']);
 
-	grunt.registerTask('test', ['cafemocha']);
+	grunt.registerTask('build', ['uglify:dev', 'uglify:min']);
+
+	grunt.registerTask('default', ['test']);
 };

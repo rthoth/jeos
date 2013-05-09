@@ -1,11 +1,6 @@
-;(function (jeos) {
-
+;(function(jeos) {
 	var Edge = jeos.Edge;
-	/**
-		@type WeightedOffset
 
-		@parameter coordinates [[double, double]+]
-	*/
 	var WeightedOffset = function (coordinates) {
 		this.edges = Edge.from(jeos.antiClockWise(coordinates));
 	};
@@ -79,7 +74,7 @@
 			var overlaps = searchOverlaps(pi, shadows);
 			if (overlaps !== false) {
 				overlaps.forEach(function(overlap) {
-					console.log(overlap);
+					
 				});
 			}
 		});
@@ -192,5 +187,6 @@
 	};
 
 	jeos.WeightedOffset = WeightedOffset;
-
-})(typeof window === 'undefined' ? GLOBAL.jeos = GLOBAL.jeos || {} : window.jeos = window.jeos || {});
+})(
+	(function(){return this.jeos;})()
+);

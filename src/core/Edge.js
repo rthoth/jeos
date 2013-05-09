@@ -1,8 +1,4 @@
-(function (jeos) {
-
-
-
-
+;(function(jeos) {
 	var between = function (min, max, value) {
 		return value >= min && value <= max;
 	};
@@ -170,5 +166,8 @@
 		return edges;
 	};
 	jeos.Edge = Edge;
-
-})(typeof window !== 'undefined' ? window.jeos = window.jeos || {} : GLOBAL.jeos = GLOBAL.jeos || {});
+})(
+	(function() {
+		return this.jeos;
+	})()
+);

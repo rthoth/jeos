@@ -32,7 +32,7 @@ describe("WeightedOffset", function(){
 
 		it("another test", function(){
 			var coordinates = [
-				[100,200],[200,200],[250,150],[200,100],[100,100]
+				[100,200],[200,200],[200,120],[200,100],[100,100]
 			];
 			var edges = jeos.Edge.from(coordinates);
 			var woffset = new jeos.WeightedOffset(coordinates);
