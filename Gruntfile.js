@@ -26,6 +26,7 @@ module.exports = function (grunt) {
 
 						'src/algorithms/ClockWise.js',
 						'src/algorithms/Projects.js',
+						'src/algorithms/Opposites.js',
 
 						'src/offset/WeightedOffset2.js'
 					]

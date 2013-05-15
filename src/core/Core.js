@@ -15,8 +15,11 @@
 	};
 
 	var lOrR = jeos.lOrR = function (v1, v2) {
+
 		var s1 = (v1.i * v2.j), s2 = (v1.j * v2.i);
 		var signal = s1 - s2;
+
+		debugger;
 
 		return signal > 0 ? 1 : (signal < 0 ? 2 : 0);
 	};
@@ -92,6 +95,10 @@
 
 	Point.prototype.toString = function () {
 		return "(" + this.x + "," + this.y + ")";
+	};
+
+	jeos.toString = function () {
+		return "jeos";
 	};
 
 })(

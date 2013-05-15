@@ -26,6 +26,21 @@ describe("Projection", function(){
 			jeos.projects(q3, q1, q1, q3).should.equal(true);
 		});
 
+		it("#05 doesn't project", function(){
+			var p1 = jeos.point(3,-3);
+			var p2 = jeos.point(2,-1);
+			var p3 = jeos.point(-4,1);
+			var p4 = jeos.point(-2,-1);
+
+			jeos.projects(p1, p2, p3, p4).should.equal(false);
+
+			var e1 = new jeos.Edge(p1, p2);
+			var e2 = new jeos.Edge(p3, p4);
+
+			e1.projects(e2).should.equal(false);
+
+		});
+
 	});
 
 	describe("Edges", function(){

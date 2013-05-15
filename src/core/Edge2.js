@@ -1,11 +1,20 @@
 (function (jeos) {
 
+	var vector = jeos.vector;
+
 	var Edge = jeos.Type({
 		initialize: function (pPoint, qPoint) {
 			this.p = pPoint;
 			this.q = qPoint;
 
 			this.pq = jeos.vector(pPoint, qPoint);
+		},
+
+		isLeftOf: function (other) {
+			var result = jeos.lOrR(other.pq, vector(other.p, this.p)) |
+			jeos.lOrR(other.pq, vector(other.p, this.q));
+
+			return result === 1;
 		},
 
 		toString: function() {

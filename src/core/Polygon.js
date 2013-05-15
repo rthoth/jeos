@@ -21,13 +21,23 @@
 				throw new Error("Polygon must have 3 points!");
 		},
 
+		others: function(edge) {
+			return this.shell.filter(function (e) {
+				return e !== edge;
+			});
+		},
+
 		reverse: function () {
 			var reverseRing = this.shell.map(function (edge) {
 				return edge.p;
 			});
 			reverseRing.push(this.shell[0].p);
 
-			return new Polygon(reverseRing);
+			return new Polygon(reverseRing.reverse());
+		},
+
+		toString: function() {
+			return "Polygon(" + this.shell.join(',') + ')';
 		}
 
 	});
