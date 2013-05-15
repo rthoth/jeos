@@ -7,7 +7,14 @@
 			this.p = pPoint;
 			this.q = qPoint;
 
-			this.pq = jeos.vector(pPoint, qPoint);
+			this.pq = vector(pPoint, qPoint);
+		},
+
+		distanceOfPoint: function (point) {
+			var vpa = vector(this.p, point);
+			var z = vpa.i * this.pq.j - vpa.j * this.pq.i;
+
+			return Math.sqrt( (z * z) / (Math.pow(this.pq.i, 2) + Math.pow(this.pq.j, 2)));
 		},
 
 		isLeftOf: function (other) {
@@ -15,6 +22,10 @@
 			jeos.lOrR(other.pq, vector(other.p, this.q));
 
 			return result === 1;
+		},
+
+		reverse: function() {
+			return new Edge(this.qPoint, this.pPoint);
 		},
 
 		toString: function() {
