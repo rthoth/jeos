@@ -21,9 +21,13 @@ module.exports = function (grunt) {
 					'build/jeos.dev.js': [
 						'src/core/Core.js',
 						'src/core/Angle.js',
-						'src/core/ClockWise.js',
-						'src/core/Edge.js',
-						'src/offset/WeightedOffset.js'
+						'src/core/Edge2.js',
+						'src/core/Polygon.js',
+
+						'src/algorithms/ClockWise.js',
+						'src/algorithms/Projects.js',
+
+						'src/offset/WeightedOffset2.js'
 					]
 				}
 			},
@@ -31,7 +35,8 @@ module.exports = function (grunt) {
 				options: {
 					mangle: true,
 					compress: true,
-					beautify: false
+					beautify: false,
+					report: 'gzip'
 				},
 				files: {
 					'build/jeos.min.js' : [
@@ -48,7 +53,7 @@ module.exports = function (grunt) {
 					require: [
 						"should", "build/jeos.dev.js"
 					],
-					reporter: 'list'
+					reporter: 'dot'
 				}
 			}
 		}
