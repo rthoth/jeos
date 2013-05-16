@@ -55,7 +55,7 @@ module.exports = function (grunt) {
 					require: [
 						"should", "build/jeos.dev.js"
 					],
-					reporter: 'dot'
+					reporter: 'list'
 				}
 			}
 		}

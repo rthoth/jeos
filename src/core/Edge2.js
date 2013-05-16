@@ -18,10 +18,12 @@
 		},
 
 		isLeftOf: function (other) {
-			var result = jeos.lOrR(other.pq, vector(other.p, this.p)) |
-			jeos.lOrR(other.pq, vector(other.p, this.q));
+			if (jeos.lOrR(other.pq, vector(other.p, this.p)) === 1)
+				return true;
+			else if (jeos.lOrR(other.pq, vector(other.p, this.q)) === 1)
+				return true;
 
-			return result === 1;
+			return false;
 		},
 
 		reverse: function() {

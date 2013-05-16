@@ -12,7 +12,7 @@ describe("Opposites", function(){
 
 		it("#01 1st edge", function(){
 			var opposites = testEdge(0);
-			opposites.should.have.lengthOf(3);
+			opposites.should.have.lengthOf(3, star.shell[0]);
 		});
 
 		it("#02 2nd edge", function(){
@@ -102,8 +102,8 @@ describe("Opposites", function(){
 			opposites(7).should.have.lengthOf(5);
 		});
 
-		it("9x 9th edge", function(){
-			opposites(8).should.have.lengthOf(5);
+		it("#9 9th edge", function(){
+			opposites(8).should.have.lengthOf(7, antiClockWisePolygon.shell[8]);
 		});
 
 		it("#10 10th edge", function(){
@@ -119,7 +119,7 @@ describe("Opposites", function(){
 		});
 
 		it("#13 13th edge", function(){
-			opposites(12).should.have.lengthOf(5);
+			opposites(12).should.have.lengthOf(5, antiClockWisePolygon.shell[12]);
 		});
 
 		it("#14 14th edge", function(){
@@ -140,10 +140,6 @@ describe("Opposites", function(){
 
 		it("#18 18th edge", function(){
 			opposites(17).should.have.lengthOf(1);
-		});
-
-		it.skip("#x xth edge", function(){
-			opposites(x).should.have.lengthOf(x);
 		});
 
 	});

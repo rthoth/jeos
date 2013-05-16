@@ -14,12 +14,29 @@
 		return type;
 	};
 
+	var pAngle = jeos.pAngle = function (vec) {
+		var x = vec.i >= 0 ? vec.i : 0 - vec.i;
+		var y = vec.j >= 0 ? vec.j : 0 - vec.j;
+		var angle;
+
+		if (x >= y)
+			angle = y / x;
+		else
+			angle = 2 - x / y;
+
+		if (vec.i < 0)
+			angle = 4 - angle;
+
+		if (vec.j < 0)
+			angle = 8 - angle;
+
+		return angle;
+	};
+
 	var lOrR = jeos.lOrR = function (v1, v2) {
 
 		var s1 = (v1.i * v2.j), s2 = (v1.j * v2.i);
 		var signal = s1 - s2;
-
-		debugger;
 
 		return signal > 0 ? 1 : (signal < 0 ? 2 : 0);
 	};
