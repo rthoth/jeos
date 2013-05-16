@@ -33,6 +33,12 @@
 		return angle;
 	};
 
+	var indexOf = jeos.indexOf = function (point, origin, vec) {
+		var po = vector(point, origin);
+		var index = 0 - ((vec.i * po.i + vec.j * po.j) / (vec.i * vec.i + vec.j * vec.j));
+		return index;
+	};
+
 	var lOrR = jeos.lOrR = function (v1, v2) {
 
 		var s1 = (v1.i * v2.j), s2 = (v1.j * v2.i);
@@ -82,10 +88,10 @@
 		return "<" + this.i + "," + this.j + ">";
 	};
 
-	var vector = jeos.vector = function (pointA, pointB) {
+	var vector = jeos.vector = function (origin, target) {
 		return new Vector(
-			pointB.x - pointA.x,
-			pointB.y - pointA.y
+			target.x - origin.x,
+			target.y - origin.y
 		);
 	};
 

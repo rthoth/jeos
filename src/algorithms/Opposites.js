@@ -5,8 +5,8 @@
 				ae2 = jeos.pAngle(e2.pq);
 
 		var delta = Math.abs(ae2 - ae1);
-		debugger;
-		return delta > 2 && delta <= 6;
+
+		return delta > 2 && delta < 6;
 	};
 
 	/**

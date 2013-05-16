@@ -70,4 +70,17 @@ describe("Polygon", function () {
 		});
 	});
 
+
+	describe("Star", function(){
+		var polygon = jeos.Polygon.from([
+			[0,-2],[3,-3],[2,-1],[4,1],[1,1],[0,3],[-1,1],[-4,1],[-2,-1],[-3,-3]
+		]);
+
+		it("#01 should antiClockWise", function(){
+			polygon.isClockWise().should.equal(false);
+			polygon.reverse().isClockWise().should.equal(true);
+			polygon.reverse().reverse().isClockWise().should.equal(false);
+		});
+	});
+
 });

@@ -42,9 +42,9 @@
 
 	});
 
-	Polygon.from = function (points) {
-		var shell = points.map(function(point) {
-			return jeos.point(point[0], point[1]);
+	Polygon.from = function (coordinates) {
+		var shell = coordinates.map(function(coordinate) {
+			return jeos.point(coordinate[0], coordinate[1]);
 		});
 		shell.push(shell[0]);
 

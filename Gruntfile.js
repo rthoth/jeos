@@ -23,6 +23,7 @@ module.exports = function (grunt) {
 						'src/core/Angle.js',
 						'src/core/Edge2.js',
 						'src/core/Polygon.js',
+						'src/core/Projection.js',
 
 						'src/algorithms/ClockWise.js',
 						'src/algorithms/Projects.js',
