@@ -1,4 +1,4 @@
-describe("WeightedOffset", function(){
+describe.only("WeightedOffset", function(){
 
 	var should = require("should");
 	it("#01 Star", function () {

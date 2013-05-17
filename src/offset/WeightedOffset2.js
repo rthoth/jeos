@@ -10,15 +10,12 @@
 			var polygon = this.polygon;
 
 			var distances = polygon.shell.map(function (edge) {
-				var opposites = jeos.opposites(edge, polygon.others(edge), function (opposite) {
+				var projections = jeos.opposites(edge, polygon.others(edge), function (opposite) {
 
 					return new jeos.Projection(opposite, edge);
-
-				}).sort(function (o1, o2) {
-					return o1.p < o2.p ? -1 : (o2.p > o1.p ? 1 : 0);
 				});
 
-				return jeos.distances(edge, opposites);
+				return jeos.shadows(projections);
 			});
 
 			console.log(distances);

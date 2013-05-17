@@ -26,8 +26,15 @@
 			return false;
 		},
 
+		pointAt: function (index) {
+			return jeos.point(
+				this.p.x + index * this.pq.i,
+				this.p.y + index * this.pq.j
+			);
+		},
+
 		reverse: function() {
-			return new Edge(this.qPoint, this.pPoint);
+			return new Edge(this.q, this.p);
 		},
 
 		toString: function() {
