@@ -4,12 +4,6 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		ghost: {
-			dist: {
-				filesSrc: ['tests/simple.js']
-			}
-		},
-
 		uglify: {
 			dev: {
 				options: {
@@ -19,18 +13,8 @@ module.exports = function (grunt) {
 				},
 				files: {
 					'build/jeos.dev.js': [
-						'src/core/Core.js',
-						'src/core/Angle.js',
-						'src/core/Edge2.js',
-						'src/core/Polygon.js',
-						'src/core/Projection.js',
-
-						'src/algorithms/ClockWise.js',
-						'src/algorithms/Projects.js',
-						'src/algorithms/Opposites.js',
-						'src/algorithms/Shadows.js',
-
-						'src/offset/WeightedOffset2.js'
+						'src/core/core.js',
+						'src/core/primitives.js'
 					]
 				}
 			},
@@ -59,18 +43,32 @@ module.exports = function (grunt) {
 					reporter: 'list'
 				}
 			}
+		},
+
+		yuidoc: {
+			pkg: grunt.file.readJSON('package.json'),
+			name: '<%= pkg.name %>',
+			description: '<%= pkg.description %>',
+			version: '<%= pkg.version %>',
+			url: '<%= pkg.home %>',
+			options: {
+				paths: ['src/'],
+				outdir: 'build/docs/'
+			}
 		}
 	});
-
-	grunt.loadNpmTasks('grunt-ghost');
 
 	grunt.loadNpmTasks('grunt-cafe-mocha');
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
+	grunt.loadNpmTasks('grunt-contrib-yuidoc');
+
 	grunt.registerTask('test', ['uglify:dev', 'cafemocha']);
 
 	grunt.registerTask('build', ['uglify:dev', 'uglify:min']);
+
+	grunt.registerTask('doc', 'yuidoc');
 
 	grunt.registerTask('default', ['test']);
 };
