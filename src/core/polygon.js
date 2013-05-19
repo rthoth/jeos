@@ -15,6 +15,22 @@
 				var q = points[(i + 1) % points.length];
 				this.edges.push(new jeos.Edge(p, q));
 			}
+		},
+
+		/**
+			Polygon is ClockWise?
+
+			@method isClockWise
+			@returns {Boolean}
+		*/
+		isClockWise: function () {
+			var clockWise = jeos.clockWise(this.points);
+			if (clockWise === 1)
+				return true;
+			else if (clockWise === 0)
+				throw new Error("Irregular polygon!");
+
+			return false;
 		}
 	});
 

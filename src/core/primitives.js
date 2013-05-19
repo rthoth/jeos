@@ -26,9 +26,12 @@
 		@static
 		@for jeos
 		@param {Array} points Array of {{#crossLink "Point"}}{{/crossLink}}
+		@returns {Integer} 0 clockWise, 1 counterClockWise and 0 is strange!
 	*/
 
 	var clockWise = jeos.clockWise = function (points) {
+		var count = 0;
+		debugger;
 		for (var i=0; i<points.length; i++) {
 			var p = points[i];
 			var q = points[(i+1) % points.length];
@@ -42,7 +45,7 @@
 				count--;
 		}
 
-		return clockWise;
+		return clockWise > 0 ? 1 : ((count < 0) ? -1 : 0);
 	};
 
 })(

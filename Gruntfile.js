@@ -14,7 +14,11 @@ module.exports = function (grunt) {
 				files: {
 					'build/jeos.dev.js': [
 						'src/core/core.js',
-						'src/core/primitives.js'
+						'src/core/angle.js',
+						'src/core/primitives.js',
+
+						'src/core/edge.js',
+						'src/core/polygon.js'
 					]
 				}
 			},

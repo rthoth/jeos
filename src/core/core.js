@@ -21,10 +21,12 @@
 				this.initialize.apply(this, arguments);
 		};
 
-		for (var k in prototype) {
-			if (prototype.hasOwnProperty(prototype))
-				type.prototype[k] = prototype[k];
+		for (var key in prototype) {
+			if (prototype.hasOwnProperty(key))
+				type.prototype[key] = prototype[key];
 		}
+
+		return type;
 	};
 
 	/**

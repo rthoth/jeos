@@ -15,7 +15,6 @@ describe("Primitives", function () {
 
 				});
 				it("right on #02", function(){
-					debugger;
 					jeos.normalLorR(horizontal, point(5, 5), point(6, 4)).should.equal(2);
 					jeos.normalLorR(vertical, point(5, 5), point(7, 6)).should.equal(2);
 				});

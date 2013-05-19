@@ -11,7 +11,7 @@
 		@param {Point} p Start point
 		@param {Point} q End point
 	*/
-	var Edge = jeos.Type({
+	var Edge = jeos.Edge = jeos.Type({
 		/**
 			@property p
 			@type Point
