@@ -106,6 +106,15 @@
 	};
 
 	/**
+		Returns reverse vector
+		@method reverse
+		@returns {Vector}
+	*/
+	Vector.prototype.reverse = function () {
+		return new Vector(-this.i, -this.j);
+	};
+
+	/**
 		@method vector
 		@for jeos
 		@static
@@ -123,7 +132,7 @@
 		@for jeos
 		@static
 
-		@param {Array} coordinates array with 2 members
+		@param {Array} array Coordinates
 	*/
 	var vector = jeos.vector =  function (arg1, arg2) {
 		if (arguments.length === 1)

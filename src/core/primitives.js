@@ -4,21 +4,22 @@
 (function(jeos) {
 	/**
 
-		Q is left or right of P?
+		normal Point Relative Position
 
-		@method normalLorR
+		@method normalPRP
 		@static
 		@for jeos
 		@param {Vector} vec Normal vector
 		@param {Point} p Reference point
 		@param {Point} q Target point
 
-		@returns {integer} 1 is left, 2 is right and 0 is collinear
+		@returns {integer} 0: left, 1: collinear, 2: right
 	*/
-	var normalLorR = jeos.normalLorR = function (vec, p, q) {
-		var z = vec.j * (q.y - p.y) + vec.i * (q.x - p.x);
-
-		return z > 0 ? 2 : (z < 0 ? 1 : 0);
+	var normalPRP = jeos.normalPRP = function (vec, p, q) {
+		debugger;
+		var lr = vec.j * (q.y - p.y) + vec.i * (q.x - p.x);
+		// Remember: lr is inverse!
+		return lr < 0 ? 0 : (lr > 0 ? 2 : 1);
 	};
 
 	/**
@@ -26,26 +27,19 @@
 		@static
 		@for jeos
 		@param {Array} points Array of {{#crossLink "Point"}}{{/crossLink}}
-		@returns {Integer} 0 clockWise, 1 counterClockWise and 0 is strange!
+		@returns {Integer} 1 clockWise, -1 counterClockWise and 0 is strange!
 	*/
 
 	var clockWise = jeos.clockWise = function (points) {
-		var count = 0;
-		debugger;
+		var sum = 0;
 		for (var i=0; i<points.length; i++) {
 			var p = points[i];
 			var q = points[(i+1) % points.length];
-			var r = points[(i+2) % points.length];
-			var z = (q.x - p.x) * (r.y - q.y);
-			z -= (q.y - p.y) * (r.x - q.x);
 
-			if (z > 0)
-				count++;
-			else if (z < 0)
-				count--;
+			sum += p.x * q.y - q.x * p.y;
 		}
 
-		return clockWise > 0 ? 1 : ((count < 0) ? -1 : 0);
+		return  sum > 0 ? -1 : (sum < 0 ? 1 : 0);
 	};
 
 })(

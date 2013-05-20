@@ -18,6 +18,18 @@
 		},
 
 		/**
+			Returns i-th edge
+
+			@method edge
+			@param {integer} index 0 index
+
+			@returns {Edge}
+		*/
+		edge: function (i) {
+			return this.edges[i];
+		},
+
+		/**
 			Polygon is ClockWise?
 
 			@method isClockWise
@@ -31,6 +43,20 @@
 				throw new Error("Irregular polygon!");
 
 			return false;
+		},
+
+		isCounterClockWise: function() {
+			var clockWise = jeos.clockWise(this.points);
+			if (clockWise === -1)
+				return true;
+			else if (clockWise === 0)
+				throw new Error("Irregular polygon!");
+
+			return false;
+		},
+
+		reverse: function() {
+			return new Polygon(this.points.slice(0).reverse());
 		}
 	});
 
