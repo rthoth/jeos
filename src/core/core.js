@@ -45,6 +45,10 @@
 		this.y = y;
 	};
 
+	Point.prototype.toString = function () {
+		return "(" + this.x + ", " + this.y + ")";
+	};
+
 	/**
 
 		2D point
@@ -146,7 +150,9 @@
 
 })(
 	function () {
-		this.jeos = {};
+		this.jeos = {
+			toString: "jeos"
+		};
 		return this.jeos;
 	}()
 );

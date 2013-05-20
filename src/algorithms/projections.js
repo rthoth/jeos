@@ -27,7 +27,28 @@
 		@returns {Boolean}
 	*/
 	var hasProjection = jeos.hasProjection = function (source, target) {
-		
+		var pointValue = function (point)  {
+			var rp = jeos.normalPRP(target.pq, target.p, point);
+			var rq = jeos.normalPRP(target.pq, target.q, point);
+			return rp | rq;
+		};
+
+		var vP = pointValue(source.p);
+		var vQ = pointValue(source.q);
+
+		var projects = vP !== vQ ? true : vQ === 3;
+
+		debugger;
+
+		if (projects) {
+			var targetAngle = jeos.angle(target.pq);
+			var sourceAngle = jeos.angle(source.pq);
+
+			var delta = Math.abs(targetAngle - sourceAngle);
+			projects = delta > 2 && delta < 6;
+		}
+
+		return projects;
 	};
 
 	/**
@@ -45,17 +66,19 @@
 	*/
 	var detectProjections = jeos.detectProjections = function (edges, func) {
 		var result = [];
-		for (var i=0; i<edges.length; i++) {
+		for (var i=0; i < edges.length; i++) {
 			var projections = [];
-			for (var j=0; i<edges.length; j++) {
-				if (j !== i && hasProjection(edges[j], edges[i]))
+			for (var j=0; j < edges.length; j++) {
+				if (j !== i && hasProjection(edges[j], edges[i])) {
 					if (func)
 						projections.push(func(edges[j], edges[i]));
 					else
-						projections.push(edges[i]);
+						projections.push(edges[j]);
 				}
 			}
+			result.push(projections);
 		}
+		return result;
 	};
 
 })(

@@ -18,7 +18,9 @@ module.exports = function (grunt) {
 						'src/core/primitives.js',
 
 						'src/core/edge.js',
-						'src/core/polygon.js'
+						'src/core/polygon.js',
+
+						'src/algorithms/projections.js'
 					]
 				}
 			},

@@ -35,5 +35,5 @@
 })(
 	function () {
 		return this.jeos;
-	}
+	}()
 );

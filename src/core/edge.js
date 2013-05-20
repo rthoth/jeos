@@ -34,6 +34,17 @@
 
 	});
 
+	/**
+		Edge from two coordinates
+		@method from
+		@param {Array} p coordinate
+		@param {Array} q coordinate
+		@returns {Edge}
+	*/
+	Edge.from = function (p, q) {
+		return new Edge(jeos.point(p), jeos.point(q));
+	};
+
 })(
 	function(){
 		return this.jeos;

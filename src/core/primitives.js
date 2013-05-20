@@ -13,13 +13,12 @@
 		@param {Point} p Reference point
 		@param {Point} q Target point
 
-		@returns {integer} 0: left, 1: collinear, 2: right
+		@returns {integer} 1: left, 0: collinear, 2: right
 	*/
 	var normalPRP = jeos.normalPRP = function (vec, p, q) {
-		debugger;
 		var lr = vec.j * (q.y - p.y) + vec.i * (q.x - p.x);
 		// Remember: lr is inverse!
-		return lr < 0 ? 0 : (lr > 0 ? 2 : 1);
+		return lr < 0 ? 1 : (lr > 0 ? 2 : 0);
 	};
 
 	/**

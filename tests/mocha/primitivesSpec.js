@@ -9,7 +9,7 @@ describe("Primitives", function () {
 				var vertical = jeos.vector([0,1]);
 				var rhorizontal = horizontal.reverse();
 				var rvertical = vertical.reverse();
-				var left = 0, right = 2, collinear = 1;
+				var left = 1, right = 2, collinear = 0;
 				var zero = point(0,0);
 
 				var test = function (vector, p1, p2, expected) {
