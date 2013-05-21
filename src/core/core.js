@@ -9,8 +9,24 @@
 */
 (function(jeos) {
 
+	/**
+		Alias for Math.pow
+		@method pow
+		@static
+	*/
 	var pow = jeos.pow = Math.pow;
+	/**
+		Alias for Math.sqrt
+		@method sqrt
+		@static
+	*/
 	var sqrt = jeos.sqrt = Math.sqrt;
+	/**
+		Alias for Math.abs
+		@method abs
+		@static
+	*/
+	var abs = jeos.abs = Math.abs;
 
 	/**
 		@class Type

@@ -2,7 +2,6 @@
 	@module core
 */
 (function(jeos){
-
 	/**
 		Edge representation
 
@@ -30,6 +29,10 @@
 			this.p = p;
 			this.q = q;
 			this.pq = jeos.vector(p, q);
+		},
+
+		toString: function () {
+			return 'Edge(' + this.p + ', ' + this.q + ')';
 		}
 
 	});

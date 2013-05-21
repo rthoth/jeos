@@ -41,6 +41,30 @@
 		return  sum > 0 ? -1 : (sum < 0 ? 1 : 0);
 	};
 
+
+	var straightPointDistance = jeos.spd = function (straightPoint, vec, point) {
+		var vpa = jeos.vector(straightPoint, point);
+		var z = vpa.i * vec.j - vpa.j * vec.i;
+
+		return jeos.sqrt( (z * z) / (jeos.pow(vec.i, 2) + jeos.pow(vec.j, 2)));
+	};
+
+	/**
+		Point Relative Position
+
+		@method prp
+		@for jeos
+		@static
+		@param {Point} p Origin point
+		@param {Vector} vec Vector
+		@param {Point} q Point
+		@returns {Int} 1: Left, 0: Collinear, 2: Right
+	*/
+	var prp = jeos.prp = function (p, vec, q) {
+		var z = vec.i * (q.y - p.y) - vec.j * (q.x - p.x);
+		return (z > 0) ? 1 : (z < 0 ? 2: 0);
+	};
+
 })(
 	function(){
 		return this.jeos;

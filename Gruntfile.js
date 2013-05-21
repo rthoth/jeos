@@ -20,6 +20,7 @@ module.exports = function (grunt) {
 						'src/core/edge.js',
 						'src/core/polygon.js',
 
+						'src/algorithms/linears.js',
 						'src/algorithms/projections.js'
 					]
 				}
