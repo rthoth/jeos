@@ -4,10 +4,10 @@
 (function (jeos) {
 
 	var isOut = function (p) {
-		if (p.si < 0 || p.si > 1)
-			throw new Error("si out!");
-		if (p.ei < 0 || p.ei > 1)
-			throw new Error("ei out!");
+		if (p.si < 0)
+			throw new Error("Start index invalid!");
+		if (p.ei > 1)
+			throw new Error("End index invalid!");
 	};
 
 	var byIndex = function (p1, p2) {
@@ -49,76 +49,85 @@
 	*/
 	var shadows = jeos.shadows = function (projections) {
 		var result = projections.map(function(projs) {
-			var sorted = projs.sort(byIndex);
-
-			return shadowsOf(sorted);
+			return scanLine(projs.slice(0).sort(byIndex));
 		});
 	};
 
-	var shadowsOf = function (projs) {
-		var visible = projs.shift();
+	/**
+
+		@method scanLine
+		@for jeos
+		@static
+		@private
+	*/
+	var scanLine = function (projs) {
 		var result = jeos.$.result();
+		var visible = projs.shift();
 		var position = visible.si;
-		var shadows = [];
+		var shadoweds = [];
+		var next;
 
-		var intersects = function (p) {
-				return p.si < visible.ei;
-		};
-
-		var updateShadows = function () {
-			for (var i=0; i < shadows.length;)
-				if (shadows[i].ei <= position) {
-					shadows.splice(i, 1);
-				} else
-					i++;
-		};
-
-		var shadower = function (p) {
-			position = p.si;
-			updateShadows();
-			if (p.valueAt(position) < visible.valueAt(position)) {
-				// swap...
-				result(position, visible.valueAt(position));
-				result(position, p.valueAt(position));
-				shadows.unshift(visible);
-				visible = p;
-			} else {
-				shadows.push(p);
-			}
+		debugger;
+		var checkShadoweds = function () {
+			jeos.$.remove(shadoweds, function (proj) {
+				return proj.ei <= position;
+			});
 		};
 
 		var nearestShadowed = function () {
-			var indexToRemove = 0;
-			var winner = shadows.reduce(function (winner, opponent, index) {
-				if (opponent.valueAt(position) < winner.valueAt(position)) {
-					indexToRemove = index;
-					return opponent;
-				}
-				else
+			var index2Remove = 0;
+			var nearest = shadoweds.reduce(function (winner, opponet, index) {
+				if (opponet.valueAt(position) < winner.valueAt(position)) {
+					index2Remove = index;
+					return opponet;
+				} else
 					return winner;
 			});
-
-			shadows.splice(indexToRemove, 1);
-			return winner;
+			shadoweds.splice(index2Remove, 1);
+			return nearest;
 		};
 
-		debugger;
-		do {
-			result(position, visible.valueAt(position));
-			var intersection = jeos.$.remove(projs, intersects);
-			intersection.forEach(shadower);
-			while (shadows.length) {
-				position = visible.ei;
-				updateShadows();
-				if (shadows.length) {
+		result(position, visible.valueAt(position));
+		while (projs.length) {
+			next = projs.shift();
+			while (visible.ei < next.si) {
+				if (position !== visible.ei) {
+					position = visible.ei;
+					checkShadoweds();
 					result(position, visible.valueAt(position));
-					visible = nearestShadowed();
-					//result(position, visible.valueAt(position));
 				}
+				visible = nearestShadowed();
+				result(position, visible.valueAt(position));
 			}
-		} while (projs.length);
 
-		result(visible.ei, visible.ed);
+			position = next.si;
+			checkShadoweds();
+
+			if (next.valueAt(position) < visible.valueAt(position)) {
+				result(position, visible.valueAt(position));
+				result(position, next.valueAt(position));
+				shadoweds.unshift(visible);
+				visible = next;
+			} else {
+				shadoweds.push(next);
+			}
+		}
+		position = visible.ei;
+		result(position, visible.valueAt(position));
+		checkShadoweds();
+		if (shadoweds.length) {
+			visible = nearestShadowed();
+			result(position, visible.valueAt(position));
+			while (shadoweds.length) {
+				position = visible.ei;
+				checkShadoweds();
+				result(position, visible.valueAt(position));
+				visible = nearestShadowed();
+				result(position, visible.valueAt(position));
+			}
+			position = visible.ei;
+			result(position, visible.valueAt(position));
+		}
 
 		return result();
 	};
