@@ -15,51 +15,84 @@
 		return jeos.point(x, y);
 	};
 
+	var $m = function (p) {
+		return (p.ed - p.sd) / (p.ei - p.si);
+	};
 	/**
 		Represents projection in a edge
 		@class Projection
 		@constructor
-		@param {Edge} other Edge source of projection
-		@param {Edge} target Edge receive projection
+		@param {number} si Start Index
+		@param {number} sd Start Distance
+		@param {number} ei End Index
+		@param {number} ed End Distance
 	*/
 	var Projection = jeos.Projection = jeos.Type({
-		initialize: function (other, target) {
-			var startPoint = other.p;
-			var endPoint = other.q;
-			var startIndex = jeos.indexOf(startPoint, target.p, target.pq);
-			var endIndex = jeos.indexOf(endPoint, target.p, target.pq);
+		initialize: function (si, sd, ei, ed) {
+			this.si = si;
+			this.sd = sd;
+			this.ei = ei;
+			this.ed = ed;
+		},
 
-			if (endIndex < startIndex) {
-				var t = startPoint;
-				startPoint = endPoint;
-				endPoint = t;
-
-				t = endIndex;
-				endIndex = startIndex;
-				startIndex = t;
+		valueAt: function (x) {
+			if (this.$m === undefined) {
+				this.$m = $m(this);
+				this.$c = this.sd - this.$m * this.si;
 			}
 
-			if (startIndex < 0) {
-				startPoint = pointAt(startPoint, other.pq, target.p, target.pq);
-				startIndex = 0;
-			}
-
-			if (endIndex > 1) {
-				endPoint = pointAt(endPoint, other.pq, target.q, target.pq);
-				endIndex = 1;
-			}
-
-			this.si = startIndex;
-			this.sd = jeos.spd(target.p, target.pq, startPoint);
-
-			this.ei = endIndex;
-			this.ed = jeos.spd(target.p, target.pq, endPoint);
+			return this.$m * x + this.$c;
 		},
 
 		toString: function() {
 			return '[(' + this.si + ', ' + this.sd + '), (' + this.ei + ', ' + this.ed + ')]';
 		}
 	});
+
+	/**
+		From two edges!
+		Source of projection and projection's target!
+
+		@method from
+		@static
+		@param {Edge} other Edge source of projection
+		@param {Edge} target Edge receive projection
+		@returns {Projection}
+	*/
+	Projection.from = function (other, target) {
+		var startPoint = other.p;
+		var endPoint = other.q;
+		var startIndex = jeos.indexOf(startPoint, target.p, target.pq);
+		var endIndex = jeos.indexOf(endPoint, target.p, target.pq);
+
+		if (endIndex < startIndex) {
+			var t = startPoint;
+			startPoint = endPoint;
+			endPoint = t;
+
+			t = endIndex;
+			endIndex = startIndex;
+			startIndex = t;
+		}
+
+		if (startIndex < 0) {
+			startPoint = pointAt(startPoint, other.pq, target.p, target.pq);
+			startIndex = 0;
+		}
+
+		if (endIndex > 1) {
+			endPoint = pointAt(endPoint, other.pq, target.q, target.pq);
+			endIndex = 1;
+		}
+
+		var si = startIndex;
+		var sd = jeos.spd(target.p, target.pq, startPoint);
+
+		var ei = endIndex;
+		var ed = jeos.spd(target.p, target.pq, endPoint);
+
+		return new Projection(si, sd, ei, ed);
+	};
 
 	/**
 		Detect has projection between edges (in counter clockwise orientation)

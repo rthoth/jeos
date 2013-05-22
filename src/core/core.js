@@ -167,7 +167,8 @@
 })(
 	function () {
 		this.jeos = {
-			toString: "jeos"
+			toString: "jeos",
+			$: {}
 		};
 		return this.jeos;
 	}()

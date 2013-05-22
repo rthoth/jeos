@@ -16,12 +16,14 @@ module.exports = function (grunt) {
 						'src/core/core.js',
 						'src/core/angle.js',
 						'src/core/primitives.js',
+						'src/core/ext.js',
 
 						'src/core/edge.js',
 						'src/core/polygon.js',
 
 						'src/algorithms/linears.js',
-						'src/algorithms/projections.js'
+						'src/algorithms/projections.js',
+						'src/algorithms/shadows.js'
 					]
 				}
 			},

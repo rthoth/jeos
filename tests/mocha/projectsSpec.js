@@ -83,7 +83,7 @@ describe("Projects", function(){
 			return {
 				source: source.toString(),
 				target: target.toString(),
-				projection: new jeos.Projection(source, target).toString()
+				projection: jeos.Projection.from(source, target).toString()
 			};
 		});
 
