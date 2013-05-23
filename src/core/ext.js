@@ -35,10 +35,8 @@
 				if (arguments.length === 0)
 					return $content;
 				else {
-					if (check && !check($content, Array.prototype.slice.call(arguments, 0)))
-							return;
-
-					$content.push(Array.prototype.slice.call(arguments, 0));
+					if (!check || check($content, Array.prototype.slice.call(arguments, 0)))
+						$content.push(Array.prototype.slice.call(arguments, 0));
 				}
 			};
 

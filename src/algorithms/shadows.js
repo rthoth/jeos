@@ -65,7 +65,7 @@
 			if (values.length) {
 				var i = values[values.length-1][0];
 				var d = values[values.length-1][1];
-				return i !== resp[0] || d !== resp[0];
+				return i !== resp[0] || d !== resp[1];
 			}
 
 			return true;
@@ -99,10 +99,12 @@
 		while (projs.length) {
 			next = projs.shift();
 			while (visible.ei < next.si) {
-				if (position !== visible.ei) {
+				if (position <= visible.ei) {
 					position = visible.ei;
 					checkShadoweds();
 					result(position, visible.valueAt(position));
+				} else {
+					throw new Error("Unexpected!");
 				}
 				visible = nearestShadowed();
 				result(position, visible.valueAt(position));
