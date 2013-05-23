@@ -48,7 +48,7 @@
 		@returns {Array} projections
 	*/
 	var shadows = jeos.shadows = function (projections) {
-		var result = projections.map(function(projs) {
+		return projections.map(function(projs) {
 			return scanLine(projs.slice(0).sort(byIndex));
 		});
 	};
@@ -61,15 +61,23 @@
 		@private
 	*/
 	var scanLine = function (projs) {
-		var result = jeos.$.result();
+		var result = jeos.$.result(function (values, resp) {
+			if (values.length) {
+				var i = values[values.length-1][0];
+				var d = values[values.length-1][1];
+				return i !== resp[0] || d !== resp[0];
+			}
+
+			return true;
+		});
 		var visible = projs.shift();
 		var position = visible.si;
 		var shadoweds = [];
 		var next;
 
 		var checkShadoweds = function () {
-			jeos.$.remove(shadoweds, function (proj) {
-				return proj.ei <= position;
+			jeos.$.remove(shadoweds, function (shadowed) {
+				return shadowed.ei <= position;
 			});
 		};
 
@@ -115,20 +123,15 @@
 		position = visible.ei;
 		result(position, visible.valueAt(position));
 		checkShadoweds();
-		if (shadoweds.length) {
+
+		while (shadoweds.length) {
 			visible = nearestShadowed();
 			result(position, visible.valueAt(position));
-			position = visible.ei;
-			checkShadoweds();
-			while (shadoweds.length) {
-				result(position, visible.valueAt(position));
-				visible = nearestShadowed();
-				result(position, visible.valueAt(position));
+			if (position !== visible.ei) {
 				position = visible.ei;
-				checkShadoweds();
+				result(position, visible.valueAt(position));
 			}
-			position = visible.ei;
-			result(position, visible.valueAt(position));
+			checkShadoweds();
 		}
 
 		return result();
