@@ -24,14 +24,14 @@
 		else if (p2.sd < p1.sd)
 			return 1;
 
-		if (p1.ei < p2.ei)
-			return -1;
-		else if (p2.ei < p1.ei)
-				return 1;
-
 		if (p1.ed < p2.ed)
 			return -1;
 		else if (p2.ed < p1.ed)
+				return 1;
+
+		if (p1.ei < p2.ei)
+			return -1;
+		else if (p2.ei < p1.ei)
 			return 1;
 		else
 			throw Error("Ouch!");
@@ -67,7 +67,6 @@
 		var shadoweds = [];
 		var next;
 
-		debugger;
 		var checkShadoweds = function () {
 			jeos.$.remove(shadoweds, function (proj) {
 				return proj.ei <= position;
@@ -88,6 +87,7 @@
 		};
 
 		result(position, visible.valueAt(position));
+		debugger;
 		while (projs.length) {
 			next = projs.shift();
 			while (visible.ei < next.si) {
@@ -118,12 +118,14 @@
 		if (shadoweds.length) {
 			visible = nearestShadowed();
 			result(position, visible.valueAt(position));
+			position = visible.ei;
+			checkShadoweds();
 			while (shadoweds.length) {
-				position = visible.ei;
-				checkShadoweds();
 				result(position, visible.valueAt(position));
 				visible = nearestShadowed();
 				result(position, visible.valueAt(position));
+				position = visible.ei;
+				checkShadoweds();
 			}
 			position = visible.ei;
 			result(position, visible.valueAt(position));

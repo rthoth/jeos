@@ -36,6 +36,11 @@
 		},
 
 		valueAt: function (x) {
+			if (this.si === x)
+				return this.sd;
+			if (this.ei === x)
+				return this.ed;
+
 			if (this.$m === undefined) {
 				this.$m = $m(this);
 				this.$c = this.sd - this.$m * this.si;
