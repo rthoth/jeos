@@ -2,6 +2,9 @@
 	@module core
 */
 (function(jeos){
+
+	var vector = jeos.vector,
+			point = jeos.point;
 	/**
 		Edge representation
 
@@ -28,7 +31,18 @@
 		initialize: function (p, q) {
 			this.p = p;
 			this.q = q;
-			this.pq = jeos.vector(p, q);
+			this.pq = vector(p, q);
+		},
+
+		normal: function (length) {
+			var lpq = this.pq.length();
+			var i = - (this.pq.j * length) / lpq;
+			var j = this.pq.i * length / lpq;
+			return vector([i, j]);
+		},
+
+		pointAt: function (index) {
+			return point(this.p.x + this.pq.i * index, this.p.y + this.pq.j * index);
 		},
 
 		toString: function () {
@@ -45,7 +59,7 @@
 		@returns {Edge}
 	*/
 	Edge.from = function (p, q) {
-		return new Edge(jeos.point(p), jeos.point(q));
+		return new Edge(point(p), point(q));
 	};
 
 })(

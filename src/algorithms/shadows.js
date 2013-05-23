@@ -61,6 +61,7 @@
 		@private
 	*/
 	var scanLine = function (projs) {
+
 		var result = jeos.$.result(function (values, resp) {
 			if (values.length) {
 				var i = values[values.length-1][0];

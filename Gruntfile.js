@@ -23,7 +23,9 @@ module.exports = function (grunt) {
 
 						'src/algorithms/linears.js',
 						'src/algorithms/projections.js',
-						'src/algorithms/shadows.js'
+						'src/algorithms/shadows.js',
+
+						'src/offset/weighted.js'
 					]
 				}
 			},
