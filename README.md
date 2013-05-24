@@ -8,7 +8,7 @@ Download
 ---
 
 
-Download developer branch [here](https://raw.github.com/rthoth/jeos/dev-0.2/build/jeos.min.js)!
+Master release at [here](https://raw.github.com/rthoth/jeos/master/build/jeos.dev.js)
 
 
 Usage
@@ -22,7 +22,7 @@ Example:
         [-100,-100], [100,-100],[0,100]
     ];
     
-    var weightedOffset = new WeightedOffset(triangleCoordinates);
+    var weightedOffset = jeos.WeightedOffset.from(triangleCoordinates);
     
     var triangleOffsetedCoordinates = weightedOffset.offset(function (distance) {
         return distance ? Math.sqrt(distance) : 10;
