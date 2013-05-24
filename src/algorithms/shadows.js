@@ -96,7 +96,6 @@
 		};
 
 		result(position, visible.valueAt(position));
-		debugger;
 		while (projs.length) {
 			next = projs.shift();
 			while (visible.ei < next.si) {

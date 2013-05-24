@@ -12,7 +12,6 @@ describe("Shadows", function (){
 
 		var test = function (index, expected) {
 			return function () {
-				debugger;
 				should.exist(projections);
 				should.exist(projections[index]);
 				var shadows = jeos.shadows([projections[index]]);
