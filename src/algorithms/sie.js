@@ -4,15 +4,17 @@
 (function (jeos) {
 
 	var p2p = function (point) {
-		return { point: point, next: null};
+		return { point: point, next: null, back: null};
 	};
 
 	var pp2e = function (p, q) {
-		var e = (p.point.y >= q.point.y) ?
-				{p: p, q: q} : {p: q, q: p};
-
-		e.pq = jeos.vector(e.p.point, e.q.point);
-		return e;
+		return {
+			$p: p,
+			$q: q,
+			p: p.point,
+			q: q.point,
+			pq: jeos.vector(p.point, q.point)
+		};
 	};
 
 	var convert = function (raw) {
@@ -39,70 +41,43 @@
 		return [points, edges];
 	};
 
-	var byYX = function (o1, o2) {
-			if (o1.p.point.y > o2.p.point.y)
-				return -1;
-			if (o2.p.point.y > o1.p.point.y)
-				return 1;
-			if (o1.p.point.x < o2.p.point.x)
-				return -1;
-			if (o2.p.point.x > o2.p.point.x)
-				return 1;
 
-			return 0;
+	var originUpdate = function (origin, crossPoint) {
+		origin.next = crossPoint;
+		crossPoint.back = origin;
 	};
 
-	var hasCross = function (e1, e2) {
-		var e1_e2 = jeos.prp(e2.p.point, e2.pq, e1.p.point) | jeos.prp(e2.p.point, e2.pq, e1.q.point);
-		var e2_e1 = jeos.prp(e1.p.point, e1.pq, e2.p.point) | jeos.prp(e1.p.point, e1.pq, e2.q.point);
-
-		return e2_e1 === e1_e2 ? e1_e2 === 3 : false;
+	var targetUpdate = function (target, crossPoint) {
+		crossPoint.next = target;
+		target.back = crossPoint;
 	};
 
-	var crossPoint = function (e1, e2) {
-		var dx = e2.p.point.x - e1.p.point.x;
-		var dy = e2.p.point.y - e1.p.point.y;
+	var $merge = function (ref, cross, crossPoint, forgotten) {
+		var origin = ref.$p;
+		if (origin.next)
+			forgotten.push(origin.next);
 
-		var z = e1.pq.i * e2.pq.j - e1.pq.j * e2.pq.i;
+		originUpdate(origin, crossPoint);
 
-		var i1 = e2.pq.j * dx - e2.pq.i * dy;
-		var i2 = e1.pq.j * dx - e1.pq.i * dy;
+		var target = cross.$q;
+		if (target.back)
+			forgotten.push(target.back);
 
-		i1 /= z;
-		i2 /= z;
-
-		var x = e1.p.point.x + i1 * e1.pq.i;
-		var y = e1.p.point.y + i1 * e1.pq.j;
-
-
-		return {
-			point: jeos.point(x, y),
-			i1: i1,
-			i2: i2
-		};
+		targetUpdate(target, crossPoint);
 	};
 
-	var searchIntersections = function (edges) {
+	var visit = function (current) {
+		var result = [];
+		var closed = false;
+		while (current && !current.visited) {
+			result.push(current.point);
+			current.visited = true;
+			current = current.next;
+			if (current && current.visited)
+				closed = true;
+		}
 
-		edges.sort(byYX);
-		var result = jeos.$.result();
-		var set = [];
-		var y;
-		var byY = function (edge) {
-			return edge.q.point.y >= y;
-		};
-
-		edges.forEach(function (e, ei) {
-			y = e.p.point.y;
-			jeos.$.remove(set, byY);
-			set.forEach(function (s, si) {
-				if (hasCross(s, e))
-					result(e, s, crossPoint(e, s));
-			});
-			set.push(e);
-		});
-
-		return result();
+		return closed ? result : false;
 	};
 
 	/**
@@ -118,19 +93,63 @@
 		@reeturns {Array}
 	*/
 	var sie = jeos.sie = function (raw, edges) {
-		debugger;
 		var points = convert(raw);
 		var oEdges = points[1];
 		points = points[0];
-		var intersections = searchIntersections(oEdges);
+		var intersections = jeos.searchIntersections(oEdges);
+		var forgotten = [];
+
+		var merge = function (ref, cross, crossPoint) {
+			return $merge(ref, cross, crossPoint, forgotten);
+		};
+
 
 		intersections.forEach(function (evt) {
 			var ref = evt[0];
 			var cross = evt[1];
-			var intersection = evt[2];
-			
+			var crossPoint = evt[2];
+			switch (jeos.prp(ref.$p.point, ref.pq, cross.$q.point)) {
+				case 0:
+					throw new Error("Unexpected collinear!");
+				case 2:
+					// from in to out
+					merge(ref, cross, crossPoint);
+					break;
+				case 1:
+					// from out to in
+					merge(cross, ref, crossPoint);
+					break;
+				default:
+					throw new Error("Really Unexpected!");
+			}
 		});
 
+		var rings = [];
+
+		for (var i=0; i<points.length; i++) {
+			var point = points[i];
+			if (!point.visited) {
+					var ring = visit(point);
+					if (ring && ring.length > 2)
+						rings.push(ring);
+			}
+		}
+
+		var shell, holes = [];
+
+		rings.forEach(function (ring) {
+			if (jeos.clockWise(ring) === -1) {
+					shell = ring;
+				/*if (!shell)
+				else{
+
+					//throw new Error("It already has a shell!");
+				}*/
+			} else
+				holes.push(ring);
+		});
+
+		return [shell].concat(holes);
 	};
 
 })(

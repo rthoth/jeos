@@ -24,6 +24,7 @@ module.exports = function (grunt) {
 						'src/algorithms/linears.js',
 						'src/algorithms/projections.js',
 						'src/algorithms/shadows.js',
+						'src/algorithms/intersections.js',
 						'src/algorithms/sie.js',
 
 						'src/offset/weighted.js'

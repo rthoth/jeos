@@ -32,7 +32,11 @@
 
 			var result = jeos.sie(raw, edges);
 
-			return result;
+			return result.map(function (ring) {
+				return ring.map(function (point) {
+					return [point.x, point.y];
+				});
+			});
 		}
 	});
 

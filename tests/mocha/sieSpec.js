@@ -1,4 +1,4 @@
-describe.only("Self Intersection Eraser", function () {
+describe("Self Intersection Eraser", function () {
 
 	describe("should", function() {
 
@@ -12,6 +12,20 @@ describe.only("Self Intersection Eraser", function () {
 			});
 		});
 
+	});
+
+	describe("Square", function () {
+
+		var square = jeos.WeightedOffset.from([
+			[2,2],[-6,3],[2,-3]
+		]);
+
+		it("#1", function () {
+			var offset = square.offset(function () {
+				return 1;
+			});
+			
+		});
 	});
 
 });

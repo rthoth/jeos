@@ -93,7 +93,7 @@ describe("Projects", function(){
 			};
 		};
 
-		it("1st edge", test(0, [0,1,2]));
+		it("1st edge", test(0, [0,1]));
 
 	});
 

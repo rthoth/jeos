@@ -85,9 +85,10 @@
 		var woffset = jeos.WeightedOffset.from(points);
 
 		var woffseted = woffset.offset(function (distance) {
-			return distance === 0 ? 10 : distance / 4;
+			return distance === 0 ? 10 : distance / 2;
 		});
-		var offsetPolygon = svg.polygon(woffseted, true);
+		console.log(woffseted);
+		var offsetPolygon = svg.polygon(woffseted[0], true);
 		offsetPolygon.style(offsetStyle);
 	};
 
