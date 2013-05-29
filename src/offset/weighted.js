@@ -19,17 +19,18 @@
 
 			var shadows = jeos.shadows(projections, func);
 
-			var result = [];
-			shadows.forEach(function (projections, edgeIndex) {
-				var edge = edges[edgeIndex];
+			var raw = shadows.map(function (projections, edgeIndex) {
+				var currentEdge = edges[edgeIndex];
 
-				projections.forEach(function  (proj) {
+				return projections.map(function  (proj) {
 					var length = func(proj[1]);
-					var externalVector = edge.normal(-length);
-					var point = edge.pointAt(proj[0]);
-					result.push([point.x + externalVector.i, point.y + externalVector.j]);
+					var externalVector = currentEdge.normal(-length);
+					var point = currentEdge.pointAt(proj[0]);
+					return jeos.point(point.x + externalVector.i, point.y + externalVector.j);
 				});
 			});
+
+			var result = jeos.sie(raw, edges);
 
 			return result;
 		}
@@ -44,6 +45,27 @@
 	*/
 	WeightedOffset.from = function (coordinates) {
 		return new WeightedOffset(jeos.Polygon.from(coordinates));
+	};
+
+
+	var leftMiddleVector = function (u, v) {
+		var lu = u.length();
+		var lv = v.length();
+
+		return jeos.vector([
+			u.i/lu - v.i/lv,
+			u.j/lu - v.j/lv
+		]);
+	};
+
+	var rightMiddleVector = function (u, v) {
+		var lu = u.length();
+		var lv = v.length();
+
+		return jeos.vector([
+			v.i/lv - u.i/lu,
+			v.j/lv - u.j/lv
+		]);
 	};
 
 })(
