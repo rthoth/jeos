@@ -3,7 +3,7 @@
 */
 (function (jeos) {
 
-	var convert = function (edge) {
+	var mapper = function (edge) {
 		return {
 			$: edge,
 			x: [edge.p.x, edge.q.x].sort(),
@@ -63,7 +63,7 @@
 	*/
 	var searchIntersections = jeos.searchIntersections = function (edges) {
 		debugger;
-		edges = edges.map(convert).sort(byYX);
+		edges = edges.map(mapper).sort(byYX);
 		var result = jeos.$.result();
 		var testSet = [];
 		var y;
@@ -75,7 +75,7 @@
 			y = e.y[1];
 			jeos.$.remove(testSet, byY);
 			testSet.forEach(function (s, si) {
-				if (hasCross(s.$, e.$))
+				if (hasCross(e.$, s.$))
 					result(e.$, s.$, crossPoint(e.$, s.$));
 			});
 			testSet.push(e);

@@ -1,7 +1,7 @@
-describe.only("Intersections", function () {
+describe("Intersections", function () {
 	var should = require("should");
 
-	describe("Triangule", function () {
+	describe("Triangle #1", function () {
 
 		debugger;
 		var polygon = jeos.Polygon.from([
@@ -12,9 +12,22 @@ describe.only("Intersections", function () {
 			var intersections = jeos.searchIntersections(polygon.edges);
 
 			should.exist(intersections);
-			intersections.should.lengthOf(4);
+			intersections.should.lengthOf(3);
 		});
 
+	});
+
+	describe("Strange #2", function () {
+		var polygon = jeos.Polygon.from([
+			[4,4],[-1,4],[-2,0],[3,3],[3,0],[-2,2],[2,-2],[1,-4],[-1,-2],[2,1],[0,3],[-3,3],[-3,-5],[4,-5]
+		]);
+
+		it("#1 have 8 cross points", function(){
+			var intersections = jeos.searchIntersections(polygon.edges);
+
+			should.exist(intersections);
+			intersections.should.lengthOf(8);
+		});
 	});
 
 });

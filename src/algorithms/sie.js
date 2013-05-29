@@ -3,14 +3,14 @@
 */
 (function (jeos) {
 
-	var p2p = function (point) {
-		return { point: point, next: null, back: null};
+	var p2node = function (point) {
+		return { point: point, next: null};
 	};
 
-	var pp2e = function (p, q) {
+	var nn2e = function (p, q) {
 		return {
-			$p: p,
-			$q: q,
+			$pNode: p,
+			$qNode: q,
 			p: p.point,
 			q: q.point,
 			pq: jeos.vector(p.point, q.point)
@@ -18,27 +18,15 @@
 	};
 
 	var convert = function (raw) {
-		raw = raw.slice(0);
-		var first = p2p(raw[0][0]);
-		raw[0].splice(0, 1);
-		var last = first;
-
-		var points = [];
+		var nodes = raw.map(p2node);
 		var edges = [];
-		for (var ei=0; ei<raw.length; ei++) {
-			for (var pi=0; pi<raw[ei].length; pi++) {
-				var current = p2p(raw[ei][pi]);
-				edges.push(pp2e(last, current));
-				last.next = current;
-				current.back = last;
-				points.push(current);
-				last = current;
-			}
+		for (var i=0 ; i<nodes.length; i++) {
+			var p = nodes[i];
+			var q = nodes[(i + 1) % nodes.length];
+			p.next = q;
+			edges.push(nn2e(p,q));
 		}
-		edges.push(pp2e(last, first));
-		last.next = first;
-		first.back = last;
-		return [points, edges];
+		return [nodes, edges];
 	};
 
 
@@ -87,16 +75,16 @@
 		@static
 		@for jeos
 
-		@param {Array} raw Array of projections per edge
-		@param {Array} edges Array of {{#crossLink "Edge"}}{{/crossLink}}
+		@param {Array} raw Array of points
 
 		@reeturns {Array}
 	*/
-	var sie = jeos.sie = function (raw, edges) {
-		var points = convert(raw);
-		var oEdges = points[1];
-		points = points[0];
-		var intersections = jeos.searchIntersections(oEdges);
+	var sie = jeos.sie = function (raw) {
+		var nodes = convert(raw);
+		var edges = nodes[1];
+		var nodes = nodes[0];
+
+		var intersections = jeos.searchIntersections(edges);
 		var forgotten = [];
 
 		var merge = function (ref, cross, crossPoint) {
@@ -108,7 +96,7 @@
 			var ref = evt[0];
 			var cross = evt[1];
 			var crossPoint = evt[2];
-			switch (jeos.prp(ref.$p.point, ref.pq, cross.$q.point)) {
+			switch (jeos.prp(ref.p, ref.pq, cross.q)) {
 				case 0:
 					throw new Error("Unexpected collinear!");
 				case 2:
