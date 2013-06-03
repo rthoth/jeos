@@ -3,7 +3,6 @@ describe("Intersections", function () {
 
 	describe("Triangle #1", function () {
 
-		debugger;
 		var polygon = jeos.Polygon.from([
 			[2,3],[-6,4],[-6,2],[1,-4],[3,-2],[-1,4],[-1,0]
 		]);

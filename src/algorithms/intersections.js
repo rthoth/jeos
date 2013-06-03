@@ -26,13 +26,29 @@
 	};
 
 	var hasCross = function (e1, e2) {
-		debugger;
 		var e1_e2 = jeos.prp(e2.p, e2.pq, e1.p) | jeos.prp(e2.p, e2.pq, e1.q);
 		var e2_e1 = jeos.prp(e1.p, e1.pq, e2.p) | jeos.prp(e1.p, e1.pq, e2.q);
 
 		return e2_e1 === e1_e2 ? e1_e2 === 3 : false;
 	};
 
+	/**
+		@class CrossPoint
+	*/
+	/**
+		@property point
+		@type {Point}
+	*/
+	/**
+		Index on edge 0
+		@property i0
+		@type {double}
+	*/
+	/**
+		Index on edge 1
+		@property i1
+		@type {double}
+	*/
 	var crossPoint = function (e1, e2) {
 		var dx = e2.p.x - e1.p.x;
 		var dy = e2.p.y - e1.p.y;
@@ -60,20 +76,21 @@
 		@method searchIntersections
 		@static
 		@for jeos
+
+		@returns {Array} array of [edge0, edge1, {{#crossLink "CrossPoint"}}{{/crossLink}}]
 	*/
 	var searchIntersections = jeos.searchIntersections = function (edges) {
-		debugger;
 		edges = edges.map(mapper).sort(byYX);
 		var result = jeos.$.result();
 		var testSet = [];
 		var y;
-		var byY = function (edge) {
+		var upperYtest = function (edge) {
 			return edge.y[0] >= y;
 		};
 
 		edges.forEach(function (e, ei) {
 			y = e.y[1];
-			jeos.$.remove(testSet, byY);
+			jeos.$.remove(testSet, upperYtest);
 			testSet.forEach(function (s, si) {
 				if (hasCross(e.$, s.$))
 					result(e.$, s.$, crossPoint(e.$, s.$));
