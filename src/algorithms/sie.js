@@ -29,45 +29,6 @@
 		return [nodes, edges];
 	};
 
-
-	var originUpdate = function (origin, crossPoint) {
-		origin.next = crossPoint;
-		crossPoint.back = origin;
-	};
-
-	var targetUpdate = function (target, crossPoint) {
-		crossPoint.next = target;
-		target.back = crossPoint;
-	};
-
-	var $merge = function (ref, cross, crossPoint, forgotten) {
-		var origin = ref.$p;
-		if (origin.next)
-			forgotten.push(origin.next);
-
-		originUpdate(origin, crossPoint);
-
-		var target = cross.$q;
-		if (target.back)
-			forgotten.push(target.back);
-
-		targetUpdate(target, crossPoint);
-	};
-
-	var visit = function (current) {
-		var result = [];
-		var closed = false;
-		while (current && !current.visited) {
-			result.push(current.point);
-			current.visited = true;
-			current = current.next;
-			if (current && current.visited)
-				closed = true;
-		}
-
-		return closed ? result : false;
-	};
-
 	/**
 		Self Intersection Eraser
 
