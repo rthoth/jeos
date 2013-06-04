@@ -40,15 +40,26 @@
 		bNode.back = aNode;
 	};
 
+	var mx = Math.max, mn = Math.min;
 	var extractRing = function (current) {
+		var x = [Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY];
+		var y = [x[0], x[1]];
+
 		var result = [];
 		while (current && !current.visited) {
 			result.push(current.point);
+			x[0] = mn(x[0], current.point.x);
+			x[1] = mx(x[1], current.point.x);
+			y[0] = mn(y[0], current.point.y);
+			y[1] = mx(y[1], current.point.y);
+
 			current.visited = true;
 			current = current.next;
 		}
 
 		result.clockWise = jeos.clockWise(result);
+		result.x = x;
+		result.y = y;
 		if (result.clockWise === 0)
 			throw new Error("Error, unexpected 0 clockwise!");
 
@@ -113,6 +124,53 @@
 		return pointYXSort(cr1[2].point, cr2[2].point);
 	};
 
+	var contains = function (ring1, ring2) {
+		if (ring2.x[0] < ring1.x[0] || ring2.x[1] > ring1.x[1])
+			return false;
+		else if (ring2.y[0] < ring1.y[0] || ring2.y[1] > ring1.y[1])
+			return false;
+		else
+			return true;
+	};
+
+	var byContains = function (ring1, ring2) {
+		if (contains(ring1, ring2))
+			return -1;
+		else if (contains(ring2, ring1))
+			return 1;
+		else
+			return 0;
+	};
+
+	var container = function (ring) {
+		return {
+			ring: ring,
+			childreen: null
+		};
+	};
+
+	var containerTree = function (containers) {
+		var root = containers.shift();
+
+		var deep = function (root, containers) {
+			var childreen = [], child;
+			var filter = function (container) {
+				return contains(child.ring, container.ring);
+			};
+
+			while (containers.length) {
+				child = containers.shift();
+				child.childreen = deep(child, jeos.$.remove(containers, filter));
+				childreen.push(child);
+			}
+
+			return childreen.length ? childreen : null;
+
+		};
+		root.childreen = deep(root, containers);
+		return root;
+	};
+
 	/**
 		Self Intersection Eraser
 
@@ -146,12 +204,20 @@
 
 			merge(e1back, node1, e2next);
 			merge(e2back, node2, e1next);
-
-
 		});
 
-		var rings = extractRings(nodes);
-		console.log(rings);
+		var tree = containerTree(extractRings(nodes).sort(byContains).map(container));
+		var shell = tree.ring.slice(0);
+
+		var holes = tree.childreen.filter(function (child) {
+			return child.ring.clockWise;
+		}).map(function (child) {
+			return child.ring.slice(0);
+		});
+
+
+		holes.unshift(shell);
+		return holes;
 	};
 
 })(
