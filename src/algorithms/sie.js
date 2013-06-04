@@ -203,6 +203,8 @@
 
 			merge(e1back, node1, e2next);
 			merge(e2back, node2, e1next);
+			nodes.push(node1);
+			nodes.push(node2);
 		});
 
 		var tree = containerTree(extractRings(nodes).sort(byContains).map(container));

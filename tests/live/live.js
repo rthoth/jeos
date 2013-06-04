@@ -21,14 +21,20 @@
 		fill: '#0f0',
 		opacity: 0.5,
 		stroke: '#000',
-		'stroke-width': 1
+		'stroke-width': 3
 	};
 
 	var holeStyle = {
 		fill: '#fff',
 		opacity:1,
-		stroke: '#000',
+		stroke: '#f00',
 		'stroke-width': 1
+	};
+
+	var rawStyle = {
+		fill: '#fff',
+		stroke: '#00f',
+		opacity: 0.5
 	};
 
 	var addPoint = function (evt) {
@@ -90,9 +96,19 @@
 
 	var offset = function () {
 		var woffset = jeos.WeightedOffset.from(points);
+		woffset.on('offset', function (raw) {
+			var points = raw.reduce(function (current, next) {
+				return current.concat(next.map(function (point) {
+					return [point.x, point.y];
+				}));
+			}, []);
+			var rawp = svg.polygon(points, true);
+			rawp.style(rawStyle);
+		});
 
 		var woffseted = woffset.offset(function (distance) {
-			return distance === 0 ? 10 : distance / 2;
+			//return distance === 0 ? 10 : distance / 2;
+			return 20;
 		});
 		console.log(woffseted);
 		var offsetPolygon = svg.polygon(woffseted.shift(), true);

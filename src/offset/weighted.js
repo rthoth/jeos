@@ -9,6 +9,7 @@
 
 		initialize: function (polygon) {
 			this.polygon = polygon.isClockWise() ? polygon.reverse() : polygon;
+			this.emitter = new jeos.Emitter();
 		},
 
 		offset: function (func) {
@@ -16,8 +17,10 @@
 			var projections = jeos.detectProjections(edges, function (source, target) {
 				return jeos.Projection.from(source, target);
 			});
+			this.emitter.fire('project', projections);
 
 			var shadows = jeos.shadows(projections, func);
+			this.emitter.fire('shadow', shadows);
 
 			var raw = shadows.map(function (projections, edgeIndex) {
 				var currentEdge = edges[edgeIndex];
@@ -29,6 +32,7 @@
 					return jeos.point(point.x + externalVector.i, point.y + externalVector.j);
 				});
 			});
+			this.emitter.fire('offset', raw);
 
 			var result = jeos.sie(raw.reduce(function (current, next) {
 				return current.concat(next);
@@ -39,6 +43,11 @@
 					return [point.x, point.y];
 				});
 			});
+		},
+
+		on: function (evt, handler) {
+			this.emitter.on(evt, handler);
+			return this;
 		}
 	});
 
