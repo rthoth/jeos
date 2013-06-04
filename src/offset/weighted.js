@@ -30,7 +30,9 @@
 				});
 			});
 
-			var result = jeos.sie(raw, edges);
+			var result = jeos.sie(raw.reduce(function (current, next) {
+				return current.concat(next);
+			}, []));
 
 			return result.map(function (ring) {
 				return ring.map(function (point) {

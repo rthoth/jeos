@@ -3,22 +3,28 @@
 */
 (function (jeos) {
 
+	var numberComp = function (a, b) {
+		return a - b;
+	};
+
 	var mapper = function (edge) {
 		return {
 			$: edge,
-			x: [edge.p.x, edge.q.x].sort(),
-			y: [edge.p.y, edge.q.y].sort()
+			x: [edge.p.x, edge.q.x].sort(numberComp),
+			y: [edge.p.y, edge.q.y].sort(numberComp)
 		};
 	};
 
 	var byYX = function (o1, o2) {
 		if (o1.y[1] > o2.y[1])
 			return -1;
+
 		else if (o2.y[1] > o1.y[1])
 			return 1;
 
-		if (o1.x[0] < o2.x[0])
+		else if (o1.x[0] < o2.x[0])
 			return -1;
+
 		else if (o2.x[0] < o1.x[0])
 			return 1;
 

@@ -61,7 +61,7 @@
 		result.x = x;
 		result.y = y;
 		if (result.clockWise === 0)
-			throw new Error("Error, unexpected 0 clockwise!");
+			throw new Error("Error, unexpected 0 clockwise!\n" + result);
 
 		result.clockWise = result.clockWise === 1;
 		return result;
@@ -200,7 +200,6 @@
 			var e1next = nodeNextFrom(e1);
 			var e2back = nodeBackFrom(e2);
 			var e2next = nodeNextFrom(e2);
-			debugger;
 
 			merge(e1back, node1, e2next);
 			merge(e2back, node2, e1next);
@@ -209,11 +208,12 @@
 		var tree = containerTree(extractRings(nodes).sort(byContains).map(container));
 		var shell = tree.ring.slice(0);
 
-		var holes = tree.childreen.filter(function (child) {
-			return child.ring.clockWise;
-		}).map(function (child) {
-			return child.ring.slice(0);
-		});
+		var holes = tree.childreen ? (tree.childreen.filter(function (child) {
+				return child.ring.clockWise;
+			}).map(function (child) {
+				return child.ring.slice(0);
+			})
+		) : [];
 
 
 		holes.unshift(shell);

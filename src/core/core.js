@@ -134,6 +134,10 @@
 		return new Vector(-this.i, -this.j);
 	};
 
+	Vector.prototype.toString = function () {
+		return '<' + this.i + ', ' + this.j + '>';
+	};
+
 	/**
 		@method vector
 		@for jeos

@@ -24,6 +24,13 @@
 		'stroke-width': 1
 	};
 
+	var holeStyle = {
+		fill: '#fff',
+		opacity:1,
+		stroke: '#000',
+		'stroke-width': 1
+	};
+
 	var addPoint = function (evt) {
 		var offset = live.offset();
 		var x = evt.clientX - offset.left;
@@ -88,8 +95,12 @@
 			return distance === 0 ? 10 : distance / 2;
 		});
 		console.log(woffseted);
-		var offsetPolygon = svg.polygon(woffseted[0], true);
+		var offsetPolygon = svg.polygon(woffseted.shift(), true);
 		offsetPolygon.style(offsetStyle);
+		woffseted.forEach(function (hole) {
+			var phole = svg.polygon(hole, true);
+			phole.style(holeStyle);
+		});
 	};
 
 })(Zepto);

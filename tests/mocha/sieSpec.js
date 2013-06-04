@@ -1,4 +1,4 @@
-describe.only("Self Intersection Eraser", function () {
+describe("Self Intersection Eraser", function () {
 
 	describe("Strange #1", function(){
 		var points = [
@@ -28,6 +28,11 @@ describe.only("Self Intersection Eraser", function () {
 			var polygon = jeos.sie(points);
 			console.log(polygon);
 		});
+	});
+
+
+	describe("Strange #3", function () {
+
 	});
 
 });
