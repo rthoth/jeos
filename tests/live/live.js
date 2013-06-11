@@ -108,7 +108,7 @@
 
 		var woffseted = woffset.offset(function (distance) {
 			//return distance === 0 ? 10 : distance / 2;
-			return 20;
+			return distance;
 		});
 		console.log(woffseted);
 		var offsetPolygon = svg.polygon(woffseted.shift(), true);

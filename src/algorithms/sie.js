@@ -217,9 +217,7 @@
 			})
 		) : [];
 
-
-		holes.unshift(shell);
-		return holes;
+		return [shell];
 	};
 
 })(
